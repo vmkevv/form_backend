@@ -1,6 +1,10 @@
 package utils
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 // MakeRes function to build the json response for requests
 func MakeRes(ok bool, content interface{}) map[string]interface{} {
@@ -8,4 +12,16 @@ func MakeRes(ok bool, content interface{}) map[string]interface{} {
 		"success": ok,
 		"content": content,
 	}
+}
+
+// MakeR function most simplified
+func MakeR(c *gin.Context, httpStatus int, content interface{}) {
+	ok := false
+	if httpStatus == http.StatusOK {
+		ok = true
+	}
+	c.JSON(
+		httpStatus,
+		MakeRes(ok, content),
+	)
 }

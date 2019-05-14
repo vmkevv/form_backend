@@ -2,12 +2,9 @@ package handlers
 
 import (
 	"form-backend/db"
-	"form-backend/structs"
 	"form-backend/utils"
 	"net/http"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -21,60 +18,59 @@ type credentials struct {
 func Login(c *gin.Context) {
 	var cred credentials
 	if err := c.ShouldBindJSON(&cred); err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			utils.MakeRes(false, "Error al parsear JSON"),
-		)
+		utils.MakeR(c, http.StatusInternalServerError, "Error al parsear JSON")
 		return
 	}
 	admin := db.Admin{
 		Email: cred.Correo,
 	}
-	err := admin.GetByEmail(cred.Correo)
+	user := db.User{
+		Email: cred.Correo,
+	}
+	errAdmin := admin.GetByEmail(cred.Correo)
+	errUser := user.GetByEmail(cred.Correo)
 
-	if err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			utils.MakeRes(false, "Correo electrónico no válido"),
-		)
+	if errAdmin != nil && errUser != nil {
+		utils.MakeR(c, http.StatusBadRequest, "Correo electrónico no válido")
 		return
 	}
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			utils.MakeRes(false, "No se pudo encriptar el password"),
+	if errUser == nil {
+		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(cred.Password)); err != nil {
+			utils.MakeR(c, http.StatusBadRequest, "Password incorrecto, vuelva a intentarlo.")
+			return
+		}
+		tokenString, err := utils.GenToken(user.ID, user.Email)
+		if err != nil {
+			utils.MakeR(c, http.StatusInternalServerError, "Error al generar el token")
+			return
+		}
+		utils.MakeR(
+			c,
+			http.StatusOK,
+			gin.H{
+				"token": tokenString,
+				"type":  "user",
+				"user":  user,
+			},
 		)
-		return
-	}
-	if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(cred.Password)); err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			utils.MakeRes(false, "Password incorrecto, vuelva a intentarlo."),
+	} else {
+		if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(cred.Password)); err != nil {
+			utils.MakeR(c, http.StatusBadRequest, "Password incorrecto, vuelva a intentarlo.")
+			return
+		}
+		tokenString, err := utils.GenToken(admin.ID, admin.Email)
+		if err != nil {
+			utils.MakeR(c, http.StatusInternalServerError, "Error al generar el token")
+			return
+		}
+		utils.MakeR(
+			c,
+			http.StatusOK,
+			gin.H{
+				"token": tokenString,
+				"type":  "admin",
+				"user":  admin,
+			},
 		)
-		return
 	}
-	expirationTime := time.Now().Add(15 * time.Minute)
-	claims := &structs.Claims{
-		ID:    admin.ID,
-		Email: admin.Email,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(structs.JwtKey)
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			utils.MakeRes(false, "Error al generar el token."),
-		)
-		return
-	}
-	c.JSON(
-		http.StatusOK,
-		gin.H{
-			"token": tokenString,
-			"admin": admin,
-		},
-	)
 }

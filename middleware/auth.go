@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"form-backend/structs"
 	"form-backend/utils"
 	"net/http"
@@ -11,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Auth: handles token validation
+// Auth handles token validation
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("Authorization")
@@ -38,8 +37,12 @@ func Auth() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, utils.MakeRes(false, "Token no valido."))
 			return
 		}
-		fmt.Println(claims.ID)
-		c.Set("id", claims.ID)
-		c.Set("email", claims.Email)
+		tokenString, err := utils.GenToken(claims.ID, claims.Email)
+		if err != nil {
+			c.Abort()
+			utils.MakeR(c, http.StatusInternalServerError, "Error generando token")
+			return
+		}
+		c.Set("tokenString", tokenString)
 	}
 }

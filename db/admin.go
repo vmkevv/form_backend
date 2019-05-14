@@ -12,12 +12,12 @@ import (
 type Admin struct {
 	refPointer int       `sql:"-"`
 	tableName  struct{}  `sql:"admin"`
-	ID         int       `sql:"id,pk"`
-	Name       string    `sql:"nombre"`
-	Email      string    `sql:"correo"`
-	Password   string    `sql:"password"`
-	CreatedAt  time.Time `sql:"created_at"`
-	UpdatedAt  time.Time `sql:"updated_at"`
+	ID         int       `sql:"id,pk" json:"id"`
+	Name       string    `sql:"nombre" json:"nombre"`
+	Email      string    `sql:"correo" json:"email"`
+	Password   string    `sql:"password" json:"-"`
+	CreatedAt  time.Time `sql:"created_at" json:"created_at"`
+	UpdatedAt  time.Time `sql:"updated_at" json:"updated_at"`
 }
 
 // Save saves user struct

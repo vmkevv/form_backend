@@ -1,8 +1,51 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"form-backend/db"
+	"form-backend/utils"
+	"net/http"
+	"time"
 
-// NewUser, registers a new user in the app
+	"golang.org/x/crypto/bcrypt"
+
+	"github.com/gin-gonic/gin"
+)
+
+// NewUser registers a new user in the app
 func NewUser(c *gin.Context) {
-
+	var user db.User
+	err := c.BindJSON(&user)
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			utils.MakeRes(false, "Error recibiendo los datos"),
+		)
+		return
+	}
+	user.UpdatedAt = time.Now()
+	user.CreatedAt = time.Now()
+	user.IsActive = true
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(user.Ci), bcrypt.DefaultCost)
+	if err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, "No se pudo encriptar el password")
+		return
+	}
+	user.Password = string(hashedPass)
+	var existEmail = user.CheckEmail(db.DBCon)
+	if existEmail {
+		utils.MakeR(c, http.StatusBadRequest, "El correo ingresado ya esta siendo usado.")
+		return
+	}
+	if err := user.Save(db.DBCon); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{
+			"user":  user,
+			"token": c.GetString("tokenString"),
+		},
+	)
 }
