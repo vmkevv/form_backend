@@ -26,5 +26,6 @@ func Connect() *pg.DB {
 	log.Printf("Connectio database successfully\n")
 	CreateUserTable(db)
 	CreateAdminTable(db)
+	CreateFormEstTable(db)
 	return db
 }

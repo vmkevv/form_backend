@@ -27,6 +27,7 @@ func main() {
 	admin.POST("/user", handlers.NewUser)
 	admin.POST("/user/active", handlers.Active)
 	admin.POST("/user/reset", handlers.Reset)
+	admin.POST("/form/form-est", handlers.NewFormEst)
 
 	r.GET("/", hello)
 	r.Run(":4000") // listen and serve on 0.0.0.0:8080
