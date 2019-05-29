@@ -19,7 +19,7 @@ type User struct {
 	LastName1  string    `sql:"appat" json:"appat"`
 	LastName2  string    `sql:"apmat" json:"apmat"`
 	Ci         string    `sql:"ci" json:"ci"`
-	Phone      int       `sql:"cel" json:"tel"`
+	Phone      int       `sql:"cel" json:"cel"`
 	Email      string    `sql:"correo" json:"correo"`
 	Password   string    `sql:"password" json:"-"`
 	HomeDir    string    `sql:"dir" json:"dir"`

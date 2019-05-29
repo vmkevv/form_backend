@@ -9,7 +9,7 @@ import (
 
 // GenToken generates a token, based in id and email
 func GenToken(id int, email string) (string, error) {
-	expirationTime := time.Now().Add(15 * time.Minute)
+	expirationTime := time.Now().Add(131400 * time.Hour)
 	claims := &structs.Claims{
 		ID:    id,
 		Email: email,
