@@ -109,3 +109,13 @@ func (u *User) ResetPassword(db *pg.DB) error {
 	}
 	return nil
 }
+
+// GetAll return a list of books
+func GetAll() ([]User, error) {
+	var users []User
+	err := DBCon.Model(&users).Select()
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}

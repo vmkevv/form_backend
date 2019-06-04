@@ -79,6 +79,8 @@ type FormEst struct {
 	Est64      string    `sql:"est64" json:"est64"`
 	Est65      string    `sql:"est65" json:"est65"`
 	Est66      string    `sql:"est66" json:"est66"`
+	Est67      string    `sql:"est67" json:"est67"`
+	Est68      string    `sql:"est68" json:"est68"`
 	CreatedAt  time.Time `sql:"created_at" json:"created_at"`
 	UpdatedAt  time.Time `sql:"updated_at" json:"updated_at"`
 }

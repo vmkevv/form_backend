@@ -25,6 +25,7 @@ func main() {
 	admin := r.Group("/api")
 	admin.Use(middleware.Auth())
 	admin.POST("/user", handlers.NewUser)
+	admin.GET("/users", handlers.UserList)
 	admin.POST("/user/active", handlers.Active)
 	admin.POST("/user/reset", handlers.Reset)
 	admin.POST("/form/form-est", handlers.NewFormEst)
