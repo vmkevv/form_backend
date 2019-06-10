@@ -79,12 +79,11 @@ func CreateUserTable(db *pg.DB) error {
 
 // ChangeActive changes active values
 func (u *User) ChangeActive(db *pg.DB) error {
-	updated := u.IsActive
 	err := db.Select(u)
 	if err != nil {
 		return err
 	}
-	u.IsActive = updated
+	u.IsActive = !u.IsActive
 	err = db.Update(u)
 	if err != nil {
 		return err
@@ -113,7 +112,7 @@ func (u *User) ResetPassword(db *pg.DB) error {
 // GetAll return a list of books
 func GetAll() ([]User, error) {
 	var users []User
-	err := DBCon.Model(&users).Select()
+	err := DBCon.Model(&users).Order("id").Select()
 	if err != nil {
 		return nil, err
 	}
