@@ -44,5 +44,6 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 		c.Set("tokenString", tokenString)
+		c.Set("userEmail", claims.Email)
 	}
 }

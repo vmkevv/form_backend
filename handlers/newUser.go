@@ -25,6 +25,7 @@ func NewUser(c *gin.Context) {
 	user.UpdatedAt = time.Now()
 	user.CreatedAt = time.Now()
 	user.IsActive = true
+	user.Type = "user"
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(user.Ci), bcrypt.DefaultCost)
 	if err != nil {
 		utils.MakeR(c, http.StatusInternalServerError, "No se pudo encriptar el password")

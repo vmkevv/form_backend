@@ -22,7 +22,7 @@ type User struct {
 	Phone      int       `sql:"cel" json:"cel"`
 	Email      string    `sql:"correo" json:"correo"`
 	Password   string    `sql:"password" json:"-"`
-	HomeDir    string    `sql:"dir" json:"dir"`
+	Type       string    `sql:"type" json:"type"`
 	CreatedAt  time.Time `sql:"created_at"`
 	UpdatedAt  time.Time `sql:"updated_at"`
 	IsActive   bool      `sql:"activo" json:"activo"`
@@ -104,6 +104,15 @@ func (u *User) ResetPassword(db *pg.DB) error {
 	u.Password = string(hashedPass)
 	err = db.Update(u)
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdatePassword updates the password
+func (u *User) UpdatePassword(newPass string) error {
+	u.Password = newPass
+	if err := DBCon.Update(u); err != nil {
 		return err
 	}
 	return nil
