@@ -30,7 +30,7 @@ func NewFormEst(c *gin.Context) {
 	var formEst db.FormEst
 	err = c.BindJSON(&formEst)
 	if err != nil {
-		utils.MakeR(c, http.StatusInternalServerError, "No se pudo parsear")
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 	formEst.UpdatedAt = time.Now()
