@@ -12,7 +12,9 @@ import (
 type FormEst struct {
 	refPointer int       `sql:"-"`
 	tableName  struct{}  `sql:"form_est"`
+	UserID     int       `sql:"user_id" json:"userId"`
 	ID         int       `sql:"id,pk" json:"id"`
+	Nro        string    `sql:"nro" json:"nro"`
 	Est1       string    `sql:"est1" json:"est1"`
 	Est2       string    `sql:"est2" json:"est2"`
 	Est3       string    `sql:"est3" json:"est3"`

@@ -27,6 +27,10 @@ func UserData(c *gin.Context) {
 		utils.MakeR(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+	if user.IsActive == false {
+		utils.MakeR(c, http.StatusBadRequest, "Lo sentimos, su cuenta ha sido inhabilitada por el administrador.")
+		return
+	}
 	utils.MakeR(
 		c,
 		http.StatusOK,

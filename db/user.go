@@ -121,7 +121,7 @@ func (u *User) UpdatePassword(newPass string) error {
 // GetAll return a list of books
 func GetAll() ([]User, error) {
 	var users []User
-	err := DBCon.Model(&users).Order("id").Select()
+	err := DBCon.Model(&users).Order("id").Where("type = ?", "user").Select()
 	if err != nil {
 		return nil, err
 	}

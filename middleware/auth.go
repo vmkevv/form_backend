@@ -24,8 +24,8 @@ func Auth() gin.HandlerFunc {
 			return structs.JwtKey, nil
 		})
 		if err != nil {
+			c.Abort()
 			if strings.Contains(err.Error(), "token is expired by") {
-				c.Abort()
 				c.JSON(http.StatusBadRequest, utils.MakeRes(false, "Ha estado inactivo por más de 25 minutos, por favor ingrese de nuevo."))
 				return
 			}
