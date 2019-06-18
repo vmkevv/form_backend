@@ -21,6 +21,7 @@ func main() {
 
 	public := r.Group("/api")
 	public.POST("/login", handlers.Login)
+	public.POST("/student", handlers.SearchStudent)
 
 	admin := r.Group("/api")
 	admin.Use(middleware.Auth())
