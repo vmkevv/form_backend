@@ -47,6 +47,15 @@ func (u *User) GetByEmail(correo string) error {
 	return nil
 }
 
+// GetByID get user by id
+func (u *User) GetByID() error {
+	err := DBCon.Select(u)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // CheckEmail check if given email exists
 func (u *User) CheckEmail(db *pg.DB) bool {
 	var users []User
