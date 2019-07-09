@@ -33,6 +33,8 @@ func main() {
 	admin.POST("/user/reset", handlers.Reset)
 	admin.POST("/form/form-est", handlers.NewFormEst)
 	admin.GET("/form/form-est/:nro", handlers.GetFormEst)
+	admin.POST("/form/form-pro", handlers.NewFormPro)
+	admin.GET("/form/form-pro/:nro", handlers.GetFormPro)
 
 	r.GET("/", hello)
 	r.Run(":4000") // listen and serve on 0.0.0.0:8080
