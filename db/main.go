@@ -28,5 +28,6 @@ func Connect() *pg.DB {
 	CreateFormEstTable(db)
 	CreateStudentTable(db)
 	CreateFormProTable(db)
+	CreateFormPreTable(db)
 	return db
 }

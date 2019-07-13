@@ -8,6 +8,7 @@ import (
 	"github.com/go-pg/pg/orm"
 )
 
+// FormPro profesionals form
 type FormPro struct {
 	refPointer int       `sql:"-"`
 	tableName  struct{}  `sql:"form_pro"`

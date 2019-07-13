@@ -35,6 +35,8 @@ func main() {
 	admin.GET("/form/form-est/:nro", handlers.GetFormEst)
 	admin.POST("/form/form-pro", handlers.NewFormPro)
 	admin.GET("/form/form-pro/:nro", handlers.GetFormPro)
+	admin.POST("/form/form-pre", handlers.NewFormPre)
+	admin.GET("/form/form-pre/:nro", handlers.GetFormPre)
 
 	r.GET("/", hello)
 	r.Run(":4000") // listen and serve on 0.0.0.0:8080
