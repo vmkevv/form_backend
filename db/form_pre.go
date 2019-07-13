@@ -88,7 +88,7 @@ func (fpre *FormPre) Save() error {
 
 // GetByNro get form by nro
 func (fpre *FormPre) GetByNro(nro string) error {
-	err := DBCon.Model(fpre).Where("nro = ?", nro).Select()
+	err := DBCon.Model(fpre).Where("nro = ?", nro).First()
 	if err != nil {
 		return err
 	}

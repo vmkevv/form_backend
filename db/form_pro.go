@@ -104,7 +104,7 @@ func CreateFormProTable(db *pg.DB) error {
 
 // GetByNro get form by nro
 func (fp *FormPro) GetByNro(nro string) error {
-	err := DBCon.Model(fp).Where("nro = ?", nro).Select()
+	err := DBCon.Model(fp).Where("nro = ?", nro).First()
 	if err != nil {
 		return err
 	}

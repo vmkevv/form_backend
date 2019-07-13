@@ -113,7 +113,7 @@ func CreateFormEstTable(db *pg.DB) error {
 
 // GetByNro get form by nro
 func (fe *FormEst) GetByNro(nro string) error {
-	err := DBCon.Model(fe).Where("nro = ?", nro).Select()
+	err := DBCon.Model(fe).Where("nro = ?", nro).First()
 	if err != nil {
 		return err
 	}
