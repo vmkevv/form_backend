@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"form-backend/db"
 	"form-backend/structs"
 	"form-backend/utils"
@@ -17,6 +18,7 @@ func GetFormPre(c *gin.Context) {
 	form := db.FormPre{}
 	user := db.User{}
 	if err := form.GetByNro(nro); err != nil {
+		fmt.Print(err.Error())
 		utils.MakeR(c, http.StatusBadRequest, "No existe el form nro "+nro)
 		return
 	}
