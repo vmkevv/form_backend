@@ -136,3 +136,57 @@ func GetAll() ([]User, error) {
 	}
 	return users, nil
 }
+
+// GetFormsList gets all forms of an user
+func (u *User) GetFormsList() (interface{}, error) {
+	type form struct {
+		ID        int       `json:"id"`
+		Nro       string    `json:"nro"`
+		UpdatedAt time.Time `json:"updated_at"`
+	}
+	type respStruct struct {
+		EstForms []form `json:"form-est"`
+		DocForms []form `json:"form-doc"`
+		ProForms []form `json:"form-pro"`
+		PreForms []form `json:"form-pre"`
+	}
+	resp := respStruct{[]form{}, []form{}, []form{}, []form{}}
+
+	var estForms []FormEst
+	errEst := DBCon.Model(&estForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	if errEst != nil {
+		return nil, errEst
+	}
+	for _, estForm := range estForms {
+		resp.EstForms = append(resp.EstForms, form{estForm.ID, estForm.Nro, estForm.UpdatedAt})
+	}
+
+	var docForms []FormDoc
+	errDoc := DBCon.Model(&docForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	if errDoc != nil {
+		return nil, errDoc
+	}
+	for _, docForm := range docForms {
+		resp.DocForms = append(resp.DocForms, form{docForm.ID, docForm.Nro, docForm.UpdatedAt})
+	}
+
+	var proForms []FormPro
+	errPro := DBCon.Model(&proForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	if errPro != nil {
+		return nil, errPro
+	}
+	for _, proForm := range proForms {
+		resp.ProForms = append(resp.ProForms, form{proForm.ID, proForm.Nro, proForm.UpdatedAt})
+	}
+
+	var preForms []FormPre
+	errPre := DBCon.Model(&preForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	if errPre != nil {
+		return nil, errPre
+	}
+	for _, preForm := range preForms {
+		resp.PreForms = append(resp.PreForms, form{preForm.ID, preForm.Nro, preForm.UpdatedAt})
+	}
+
+	return resp, nil
+}
