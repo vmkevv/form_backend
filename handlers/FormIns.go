@@ -90,3 +90,21 @@ func GetFormIns(c *gin.Context) {
 		},
 	)
 }
+
+// DeleteFormIns deletes the doc form
+func DeleteFormIns(c *gin.Context) {
+	var formIns db.FormIns
+	if err := c.BindJSON(&formIns); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formIns.Delete(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formIns},
+	)
+}

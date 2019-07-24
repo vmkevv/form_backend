@@ -149,8 +149,9 @@ func (u *User) GetFormsList() (interface{}, error) {
 		DocForms []form `json:"form-doc"`
 		ProForms []form `json:"form-pro"`
 		PreForms []form `json:"form-pre"`
+		InsForms []form `json:"form-ins"`
 	}
-	resp := respStruct{[]form{}, []form{}, []form{}, []form{}}
+	resp := respStruct{[]form{}, []form{}, []form{}, []form{}, []form{}}
 
 	var estForms []FormEst
 	errEst := DBCon.Model(&estForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
@@ -186,6 +187,15 @@ func (u *User) GetFormsList() (interface{}, error) {
 	}
 	for _, preForm := range preForms {
 		resp.PreForms = append(resp.PreForms, form{preForm.ID, preForm.Nro, preForm.UpdatedAt})
+	}
+
+	var insForms []FormIns
+	errIns := DBCon.Model(&insForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	if errIns != nil {
+		return nil, errPre
+	}
+	for _, insForm := range insForms {
+		resp.InsForms = append(resp.InsForms, form{insForm.ID, insForm.Nro, insForm.UpdatedAt})
 	}
 
 	return resp, nil

@@ -90,6 +90,13 @@ func CreateFormInsTable(db *pg.DB) error {
 
 // Update updates the form
 func (fins *FormIns) Update() error {
+	var formInsAux FormIns
+	if err := formInsAux.GetByNro(fins.Nro); err != nil {
+		return err
+	}
+	fins.UserID = formInsAux.UserID
+	fins.CreatedAt = formInsAux.CreatedAt
+	fins.UpdatedAt = time.Now()
 	err := DBCon.Update(fins)
 	if err != nil {
 		return err
@@ -100,6 +107,15 @@ func (fins *FormIns) Update() error {
 // GetByNro get form by nro
 func (fins *FormIns) GetByNro(nro string) error {
 	err := DBCon.Model(fins).Where("nro = ?", nro).First()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Delete deletes the form
+func (fins *FormIns) Delete() error {
+	err := DBCon.Delete(fins)
 	if err != nil {
 		return err
 	}
