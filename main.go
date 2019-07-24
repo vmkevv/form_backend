@@ -53,6 +53,9 @@ func main() {
 	admin.PUT("/form/form-doc", handlers.UpdateFormDoc)
 	admin.DELETE("/form/form-doc", handlers.DeleteFormDoc)
 
+	admin.POST("/form/form-ins", handlers.NewFormIns)
+	admin.GET("/form/form-ins/:nro", handlers.GetFormIns)
+
 	r.GET("/", hello)
 	r.Run(":4000") // listen and serve on 0.0.0.0:8080
 }
