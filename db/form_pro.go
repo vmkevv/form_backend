@@ -79,8 +79,8 @@ type FormPro struct {
 }
 
 // Save saves the profesional form
-func (fp *FormPro) Save() error {
-	err := DBCon.Insert(fp)
+func (fpro *FormPro) Save() error {
+	err := DBCon.Insert(fpro)
 	if err != nil {
 		log.Print(err.Error())
 		return err
@@ -103,9 +103,32 @@ func CreateFormProTable(db *pg.DB) error {
 }
 
 // GetByNro get form by nro
-func (fp *FormPro) GetByNro(nro string) error {
-	err := DBCon.Model(fp).Where("nro = ?", nro).First()
+func (fpro *FormPro) GetByNro(nro string) error {
+	err := DBCon.Model(fpro).Where("nro = ?", nro).First()
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Update updates the profesiona form
+func (fpro *FormPro) Update() error {
+	var formProAux FormPro
+	if err := formProAux.GetByNro(fpro.Nro); err != nil {
+		return err
+	}
+	fpro.UserID = formProAux.UserID
+	fpro.CreatedAt = formProAux.CreatedAt
+	fpro.UpdatedAt = time.Now()
+	if err := DBCon.Update(fpro); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Delete deletes the profesional form
+func (fpro *FormPro) Delete() error {
+	if err := DBCon.Delete(fpro); err != nil {
 		return err
 	}
 	return nil

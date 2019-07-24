@@ -67,6 +67,24 @@ func UpdateFormEst(c *gin.Context) {
 	)
 }
 
+// DeleteFormEst deletes the form
+func DeleteFormEst(c *gin.Context) {
+	var formEst db.FormEst
+	if err := c.BindJSON(&formEst); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formEst.Delete(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formEst},
+	)
+}
+
 // GetFormEst gets form student
 func GetFormEst(c *gin.Context) {
 	nro := c.Param("nro")

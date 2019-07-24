@@ -73,3 +73,39 @@ func NewFormDoc(c *gin.Context) {
 		},
 	)
 }
+
+// UpdateFormDoc update docente form
+func UpdateFormDoc(c *gin.Context) {
+	var formDoc db.FormDoc
+	if err := c.BindJSON(&formDoc); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formDoc.Update(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formDoc},
+	)
+}
+
+// DeleteFormDoc deletes the doc form
+func DeleteFormDoc(c *gin.Context) {
+	var formDoc db.FormDoc
+	if err := c.BindJSON(&formDoc); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formDoc.Delete(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formDoc},
+	)
+}

@@ -94,3 +94,26 @@ func (fpre *FormPre) GetByNro(nro string) error {
 	}
 	return nil
 }
+
+// Update updates the prefas form
+func (fpre *FormPre) Update() error {
+	var formPreAux FormPre
+	if err := formPreAux.GetByNro(fpre.Nro); err != nil {
+		return err
+	}
+	fpre.UserID = formPreAux.UserID
+	fpre.CreatedAt = formPreAux.CreatedAt
+	fpre.UpdatedAt = time.Now()
+	if err := DBCon.Update(fpre); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Delete deletes the prefas form
+func (fpre *FormPre) Delete() error {
+	if err := DBCon.Delete(fpre); err != nil {
+		return err
+	}
+	return nil
+}

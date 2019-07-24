@@ -73,3 +73,39 @@ func NewFormPre(c *gin.Context) {
 		},
 	)
 }
+
+// UpdateFormPre updates the prefas form
+func UpdateFormPre(c *gin.Context) {
+	var formPre db.FormPre
+	if err := c.BindJSON(&formPre); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formPre.Update(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formPre},
+	)
+}
+
+// DeleteFormPre deleted prefas form
+func DeleteFormPre(c *gin.Context) {
+	var formPre db.FormPre
+	if err := c.BindJSON(&formPre); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formPre.Delete(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formPre},
+	)
+}

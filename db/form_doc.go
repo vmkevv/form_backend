@@ -103,3 +103,26 @@ func (fdoc *FormDoc) GetByNro(nro string) error {
 	}
 	return nil
 }
+
+// Update updater the doc form
+func (fdoc *FormDoc) Update() error {
+	var forDocAux FormDoc
+	if err := forDocAux.GetByNro(fdoc.Nro); err != nil {
+		return err
+	}
+	fdoc.UserID = forDocAux.UserID
+	fdoc.CreatedAt = forDocAux.CreatedAt
+	fdoc.UpdatedAt = time.Now()
+	if err := DBCon.Update(fdoc); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Delete deletes the doc form
+func (fdoc *FormDoc) Delete() error {
+	if err := DBCon.Delete(fdoc); err != nil {
+		return err
+	}
+	return nil
+}

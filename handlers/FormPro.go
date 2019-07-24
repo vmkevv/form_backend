@@ -71,3 +71,39 @@ func NewFormPro(c *gin.Context) {
 		},
 	)
 }
+
+// UpdateFormPro updates the profesional form
+func UpdateFormPro(c *gin.Context) {
+	var formPro db.FormPro
+	if err := c.BindJSON(&formPro); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formPro.Update(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formPro},
+	)
+}
+
+// DeleteFormPro deleted profesional form
+func DeleteFormPro(c *gin.Context) {
+	var formPro db.FormPro
+	if err := c.BindJSON(&formPro); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formPro.Delete(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formPro},
+	)
+}

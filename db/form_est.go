@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -100,8 +99,23 @@ func (fe *FormEst) Save(db *pg.DB) error {
 
 // Update updates the form
 func (fe *FormEst) Update() error {
-	fmt.Println(fe.Nro, fe.Est1, fe.Est2)
+	var estAux FormEst
+	if err := estAux.GetByNro(fe.Nro); err != nil {
+		return err
+	}
+	fe.UserID = estAux.UserID
+	fe.CreatedAt = estAux.CreatedAt
+	fe.UpdatedAt = time.Now()
 	err := DBCon.Update(fe)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Delete deletes the form
+func (fe *FormEst) Delete() error {
+	err := DBCon.Delete(fe)
 	if err != nil {
 		return err
 	}

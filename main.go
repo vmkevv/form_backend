@@ -32,15 +32,26 @@ func main() {
 	admin.GET("/users", handlers.UserList)
 	admin.POST("/user/active", handlers.Active)
 	admin.POST("/user/reset", handlers.Reset)
+
+	admin.GET("/form/form-est/:nro", handlers.GetFormEst)
 	admin.POST("/form/form-est", handlers.NewFormEst)
 	admin.PUT("/form/form-est", handlers.UpdateFormEst)
-	admin.GET("/form/form-est/:nro", handlers.GetFormEst)
-	admin.POST("/form/form-pro", handlers.NewFormPro)
+	admin.DELETE("/form/form-est", handlers.DeleteFormEst)
+
 	admin.GET("/form/form-pro/:nro", handlers.GetFormPro)
-	admin.POST("/form/form-pre", handlers.NewFormPre)
+	admin.POST("/form/form-pro", handlers.NewFormPro)
+	admin.PUT("/form/form-pro", handlers.UpdateFormPro)
+	admin.DELETE("/form/form-pro", handlers.DeleteFormPro)
+
 	admin.GET("/form/form-pre/:nro", handlers.GetFormPre)
-	admin.POST("/form/form-doc", handlers.NewFormDoc)
+	admin.POST("/form/form-pre", handlers.NewFormPre)
+	admin.PUT("/form/form-pre", handlers.UpdateFormPre)
+	admin.DELETE("/form/form-pre", handlers.DeleteFormPre)
+
 	admin.GET("/form/form-doc/:nro", handlers.GetFormDoc)
+	admin.POST("/form/form-doc", handlers.NewFormDoc)
+	admin.PUT("/form/form-doc", handlers.UpdateFormDoc)
+	admin.DELETE("/form/form-doc", handlers.DeleteFormDoc)
 
 	r.GET("/", hello)
 	r.Run(":4000") // listen and serve on 0.0.0.0:8080
