@@ -30,5 +30,6 @@ func Connect() *pg.DB {
 	CreateFormProTable(db)
 	CreateFormPreTable(db)
 	CreateFormDocTable(db)
+	CreateFormInsTable(db)
 	return db
 }
