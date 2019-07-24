@@ -48,3 +48,45 @@ func NewFormEst(c *gin.Context) {
 		},
 	)
 }
+
+// UpdateFormEst updates student form
+func UpdateFormEst(c *gin.Context) {
+	var formEst db.FormEst
+	if err := c.BindJSON(&formEst); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := formEst.Update(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"data": formEst},
+	)
+}
+
+// GetFormEst gets form student
+func GetFormEst(c *gin.Context) {
+	nro := c.Param("nro")
+	form := db.FormEst{}
+	user := db.User{}
+	if err := form.GetByNro(nro); err != nil {
+		utils.MakeR(c, http.StatusBadRequest, "No existe el form nro "+nro)
+		return
+	}
+	user.ID = form.UserID
+	if err := user.GetByID(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{
+			"form": form,
+			"user": user,
+		},
+	)
+}

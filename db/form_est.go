@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -92,6 +93,16 @@ func (fe *FormEst) Save(db *pg.DB) error {
 	err := db.Insert(fe)
 	if err != nil {
 		log.Printf("Error")
+		return err
+	}
+	return nil
+}
+
+// Update updates the form
+func (fe *FormEst) Update() error {
+	fmt.Println(fe.Nro, fe.Est1, fe.Est2)
+	err := DBCon.Update(fe)
+	if err != nil {
 		return err
 	}
 	return nil

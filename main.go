@@ -33,6 +33,7 @@ func main() {
 	admin.POST("/user/active", handlers.Active)
 	admin.POST("/user/reset", handlers.Reset)
 	admin.POST("/form/form-est", handlers.NewFormEst)
+	admin.PUT("/form/form-est", handlers.UpdateFormEst)
 	admin.GET("/form/form-est/:nro", handlers.GetFormEst)
 	admin.POST("/form/form-pro", handlers.NewFormPro)
 	admin.GET("/form/form-pro/:nro", handlers.GetFormPro)
