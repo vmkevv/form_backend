@@ -50,7 +50,9 @@ type FormIns struct {
 	Ins20      string    `sql:"ins20" json:"ins20"`
 	Ins21      string    `sql:"ins21" json:"ins21"`
 	Ins22      string    `sql:"ins22" json:"ins22"`
+	Ins22a     string    `sql:"ins22a" json:"ins22a"`
 	Ins23      string    `sql:"ins23" json:"ins23"`
+	Ins23a     string    `sql:"ins23a" json:"ins23a"`
 	Ins24      string    `sql:"ins24" json:"ins24"`
 	Ins25      string    `sql:"ins25" json:"ins25"`
 	Ins26      string    `sql:"ins26" json:"ins26"`

@@ -164,7 +164,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 	}
 
 	var docForms []FormDoc
-	errDoc := DBCon.Model(&docForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	errDoc := DBCon.Model(&docForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at", "created_at").Select()
 	if errDoc != nil {
 		return nil, errDoc
 	}
@@ -173,7 +173,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 	}
 
 	var proForms []FormPro
-	errPro := DBCon.Model(&proForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	errPro := DBCon.Model(&proForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at", "created_at").Select()
 	if errPro != nil {
 		return nil, errPro
 	}
@@ -182,7 +182,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 	}
 
 	var preForms []FormPre
-	errPre := DBCon.Model(&preForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	errPre := DBCon.Model(&preForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at", "created_at").Select()
 	if errPre != nil {
 		return nil, errPre
 	}
@@ -191,7 +191,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 	}
 
 	var insForms []FormIns
-	errIns := DBCon.Model(&insForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	errIns := DBCon.Model(&insForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at", "created_at").Select()
 	if errIns != nil {
 		return nil, errPre
 	}
