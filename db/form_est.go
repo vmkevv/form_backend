@@ -100,7 +100,8 @@ func (fe *FormEst) Save(db *pg.DB) error {
 // Update updates the form
 func (fe *FormEst) Update() error {
 	var estAux FormEst
-	if err := estAux.GetByNro(fe.Nro); err != nil {
+	estAux.ID = fe.ID
+	if err := estAux.GetByID(); err != nil {
 		return err
 	}
 	fe.UserID = estAux.UserID
@@ -140,6 +141,14 @@ func CreateFormEstTable(db *pg.DB) error {
 func (fe *FormEst) GetByNro(nro string) error {
 	err := DBCon.Model(fe).Where("nro = ?", nro).First()
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GetByID get form by id
+func (fe *FormEst) GetByID() error {
+	if err := DBCon.Select(fe); err != nil {
 		return err
 	}
 	return nil

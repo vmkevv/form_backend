@@ -117,3 +117,11 @@ func (fpre *FormPre) Delete() error {
 	}
 	return nil
 }
+
+// GetByID get form by ID
+func (fpre *FormPre) GetByID() error {
+	if err := DBCon.Select(fpre); err != nil {
+		return err
+	}
+	return nil
+}

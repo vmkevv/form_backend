@@ -6,6 +6,7 @@ import (
 	"form-backend/structs"
 	"form-backend/utils"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -107,5 +108,30 @@ func DeleteFormDoc(c *gin.Context) {
 		c,
 		http.StatusOK,
 		gin.H{"data": formDoc},
+	)
+}
+
+// GetFormDocByID get form by id
+func GetFormDocByID(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	form := db.FormDoc{}
+	user := db.User{}
+	form.ID = id
+	if err := form.GetByID(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	user.ID = form.UserID
+	if err := user.GetByID(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{
+			"form": form,
+			"user": user,
+		},
 	)
 }

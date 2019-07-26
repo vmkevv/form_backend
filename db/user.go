@@ -143,6 +143,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 		ID        int       `json:"id"`
 		Nro       string    `json:"nro"`
 		UpdatedAt time.Time `json:"updated_at"`
+		CreatedAt time.Time `json:"created_at"`
 	}
 	type respStruct struct {
 		EstForms []form `json:"form-est"`
@@ -154,12 +155,12 @@ func (u *User) GetFormsList() (interface{}, error) {
 	resp := respStruct{[]form{}, []form{}, []form{}, []form{}, []form{}}
 
 	var estForms []FormEst
-	errEst := DBCon.Model(&estForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at").Select()
+	errEst := DBCon.Model(&estForms).Where("user_id = ?", u.ID).Column("id", "nro", "updated_at", "created_at").Select()
 	if errEst != nil {
 		return nil, errEst
 	}
 	for _, estForm := range estForms {
-		resp.EstForms = append(resp.EstForms, form{estForm.ID, estForm.Nro, estForm.UpdatedAt})
+		resp.EstForms = append(resp.EstForms, form{estForm.ID, estForm.Nro, estForm.UpdatedAt, estForm.CreatedAt})
 	}
 
 	var docForms []FormDoc
@@ -168,7 +169,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 		return nil, errDoc
 	}
 	for _, docForm := range docForms {
-		resp.DocForms = append(resp.DocForms, form{docForm.ID, docForm.Nro, docForm.UpdatedAt})
+		resp.DocForms = append(resp.DocForms, form{docForm.ID, docForm.Nro, docForm.UpdatedAt, docForm.CreatedAt})
 	}
 
 	var proForms []FormPro
@@ -177,7 +178,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 		return nil, errPro
 	}
 	for _, proForm := range proForms {
-		resp.ProForms = append(resp.ProForms, form{proForm.ID, proForm.Nro, proForm.UpdatedAt})
+		resp.ProForms = append(resp.ProForms, form{proForm.ID, proForm.Nro, proForm.UpdatedAt, proForm.CreatedAt})
 	}
 
 	var preForms []FormPre
@@ -186,7 +187,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 		return nil, errPre
 	}
 	for _, preForm := range preForms {
-		resp.PreForms = append(resp.PreForms, form{preForm.ID, preForm.Nro, preForm.UpdatedAt})
+		resp.PreForms = append(resp.PreForms, form{preForm.ID, preForm.Nro, preForm.UpdatedAt, preForm.CreatedAt})
 	}
 
 	var insForms []FormIns
@@ -195,7 +196,7 @@ func (u *User) GetFormsList() (interface{}, error) {
 		return nil, errPre
 	}
 	for _, insForm := range insForms {
-		resp.InsForms = append(resp.InsForms, form{insForm.ID, insForm.Nro, insForm.UpdatedAt})
+		resp.InsForms = append(resp.InsForms, form{insForm.ID, insForm.Nro, insForm.UpdatedAt, insForm.CreatedAt})
 	}
 
 	return resp, nil

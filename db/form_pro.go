@@ -133,3 +133,11 @@ func (fpro *FormPro) Delete() error {
 	}
 	return nil
 }
+
+// GetByID get form by id
+func (fpro *FormPro) GetByID() error {
+	if err := DBCon.Select(fpro); err != nil {
+		return err
+	}
+	return nil
+}

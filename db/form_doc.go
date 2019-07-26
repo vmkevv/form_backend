@@ -126,3 +126,11 @@ func (fdoc *FormDoc) Delete() error {
 	}
 	return nil
 }
+
+// GetByID gets for by Id
+func (fdoc *FormDoc) GetByID() error {
+	if err := DBCon.Select(fdoc); err != nil {
+		return err
+	}
+	return nil
+}

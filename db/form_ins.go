@@ -38,8 +38,11 @@ type FormIns struct {
 	Ins13i     string    `sql:"ins13i" json:"ins13i"`
 	Ins13j     string    `sql:"ins13j" json:"ins13j"`
 	Ins13k     string    `sql:"ins13k" json:"ins13k"`
+	Ins13l     string    `sql:"ins13l" json:"ins13l"`
+	Ins13m     string    `sql:"ins13m" json:"ins13m"`
 	Ins14      string    `sql:"ins14" json:"ins14"`
 	Ins15      string    `sql:"ins15" json:"ins15"`
+	Ins15a     string    `sql:"ins15a" json:"ins15a"`
 	Ins16      string    `sql:"ins16" json:"ins16"`
 	Ins17      string    `sql:"ins17" json:"ins17"`
 	Ins18      string    `sql:"ins18" json:"ins18"`
@@ -117,6 +120,14 @@ func (fins *FormIns) GetByNro(nro string) error {
 func (fins *FormIns) Delete() error {
 	err := DBCon.Delete(fins)
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GetByID get form by ID
+func (fins *FormIns) GetByID() error {
+	if err := DBCon.Select(fins); err != nil {
 		return err
 	}
 	return nil
