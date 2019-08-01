@@ -32,6 +32,7 @@ func main() {
 	admin.GET("/users", handlers.UserList)
 	admin.POST("/user/active", handlers.Active)
 	admin.POST("/user/reset", handlers.Reset)
+	admin.POST("/user/admin", handlers.ChangePermissions)
 
 	admin.GET("/form/form-est/:nro", handlers.GetFormEst)
 	admin.GET("/form-est/:id", handlers.GetFormEstByID)

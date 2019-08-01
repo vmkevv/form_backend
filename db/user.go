@@ -100,6 +100,24 @@ func (u *User) ChangeActive(db *pg.DB) error {
 	return nil
 }
 
+// ChangeAdmin changes the user permissions
+func (u *User) ChangeAdmin() error {
+	err := DBCon.Select(u)
+	if err != nil {
+		return err
+	}
+	userType := u.Type
+	if userType == "admin" {
+		u.Type = "user"
+	} else {
+		u.Type = "admin"
+	}
+	if err := DBCon.Update(u); err != nil {
+		return err
+	}
+	return nil
+}
+
 // ResetPassword reset password to CI
 func (u *User) ResetPassword(db *pg.DB) error {
 	err := db.Select(u)
@@ -130,7 +148,7 @@ func (u *User) UpdatePassword(newPass string) error {
 // GetAll return a list of books
 func GetAll() ([]User, error) {
 	var users []User
-	err := DBCon.Model(&users).Order("id").Where("type = ?", "user").Select()
+	err := DBCon.Model(&users).Order("appat").Select()
 	if err != nil {
 		return nil, err
 	}

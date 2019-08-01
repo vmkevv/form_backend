@@ -36,3 +36,22 @@ func GetFormList(c *gin.Context) {
 		},
 	)
 }
+
+// ChangePermissions change the user Permissions
+func ChangePermissions(c *gin.Context) {
+	var user db.User
+	err := c.BindJSON(&user)
+	if err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if err := user.ChangeAdmin(); err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{"user": user},
+	)
+}
