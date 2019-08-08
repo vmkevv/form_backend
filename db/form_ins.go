@@ -96,7 +96,8 @@ func CreateFormInsTable(db *pg.DB) error {
 // Update updates the form
 func (fins *FormIns) Update() error {
 	var formInsAux FormIns
-	if err := formInsAux.GetByNro(fins.Nro); err != nil {
+	formInsAux.ID = fins.ID
+	if err := formInsAux.GetByID(); err != nil {
 		return err
 	}
 	fins.UserID = formInsAux.UserID

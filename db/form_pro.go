@@ -114,7 +114,8 @@ func (fpro *FormPro) GetByNro(nro string) error {
 // Update updates the profesiona form
 func (fpro *FormPro) Update() error {
 	var formProAux FormPro
-	if err := formProAux.GetByNro(fpro.Nro); err != nil {
+	formProAux.ID = fpro.ID
+	if err := formProAux.GetByID(); err != nil {
 		return err
 	}
 	fpro.UserID = formProAux.UserID
