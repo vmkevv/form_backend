@@ -20,6 +20,7 @@ func main() {
 	r.Use(middleware.WithCors())
 
 	public := r.Group("/api")
+	public.GET("/some", handlers.GetEstQuestions)
 	public.POST("/login", handlers.Login)
 	public.POST("/student", handlers.SearchStudent)
 	public.GET("/user/forms/:id", handlers.GetFormList)

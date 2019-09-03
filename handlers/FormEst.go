@@ -134,3 +134,20 @@ func GetFormEstByID(c *gin.Context) {
 		},
 	)
 }
+
+// GetEstQuestions gets student questions
+func GetEstQuestions(c *gin.Context) {
+	formEst := db.FormEst{}
+	res, err := formEst.GetQuestions()
+	if err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{
+			"res": res,
+		},
+	)
+}

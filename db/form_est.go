@@ -11,7 +11,7 @@ import (
 // FormEst handles student form
 type FormEst struct {
 	refPointer int       `sql:"-"`
-	tableName  struct{}  `sql:"form_est"`
+	tableName  struct{}  `sql:"form_est" pg:",discard_unknown_columns"`
 	UserID     int       `sql:"user_id" json:"userId"`
 	ID         int       `sql:"id,pk" json:"id"`
 	Nro        string    `sql:"nro" json:"nro"`
@@ -152,4 +152,128 @@ func (fe *FormEst) GetByID() error {
 		return err
 	}
 	return nil
+}
+
+// GetQuestions get the form est questions all in one
+func (fe *FormEst) GetQuestions() (interface{}, error) {
+	var data interface{}
+	type oneStruct struct {
+		Est4 []struct {
+			Est4 string `sql:"est4" json:"est4"`
+			Nro  string `json:"nro"`
+		} `json:"est4"`
+		Est10 []struct {
+			Est10 string `sql:"est10" json:"est10"`
+			Nro   string `json:"nro"`
+		} `json:"est10"`
+		Est11 []struct {
+			Est11 string `sql:"est11" json:"est11"`
+			Nro   string `json:"nro"`
+		} `json:"est11"`
+		Est13 []struct {
+			Est13 string `sql:"est13" json:"13"`
+			Nro   string `json:"nro"`
+		} `json:"est13"`
+		Est15 []struct {
+			Est15 string `sql:"est15" json:"15"`
+			Nro   string `json:"nro"`
+		} `json:"est15"`
+	}
+	type twoStruct struct {
+		Est16 []struct {
+			Est16 string `sql:"est16" json:"est16"`
+			Nro   string `json:"nro"`
+		} `json:"est16"`
+		Est18 []struct {
+			Est18 string `sql:"est18" json:"est18"`
+			Nro   string `json:"nro"`
+		} `json:"est18"`
+		Est19 []struct {
+			Est19 string `sql:"est19" json:"est19"`
+			Nro   string `json:"nro"`
+		} `json:"est19"`
+		Est21 []struct {
+			Est21 string `sql:"est21" json:"est21"`
+			Nro   string `json:"nro"`
+		} `json:"est21"`
+	}
+	type respStruct struct {
+		Name string      `json:"name"`
+		Data interface{} `json:"data"`
+	}
+	one := oneStruct{}
+	two := twoStruct{}
+	errEst4 := DBCon.Model(fe).
+		Column("est4").
+		ColumnExpr("count(*) as nro").
+		Group("est4").
+		Select(&data)
+	if errEst4 != nil {
+		return nil, errEst4
+	}
+	if err := DBCon.Model(fe).
+		Column("est10").
+		ColumnExpr("count(*) as nro").
+		Group("est10").
+		Select(&one.Est10); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		Column("est11").
+		ColumnExpr("count(*) as nro").
+		Group("est11").
+		Select(&one.Est11); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		Column("est13").
+		ColumnExpr("count(*) as nro").
+		Group("est13").
+		Select(&one.Est13); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		Column("est15").
+		ColumnExpr("count(*) as nro").
+		Group("est15").
+		Order("est15").
+		Select(&one.Est15); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		Column("est16").
+		ColumnExpr("count(*) as nro").
+		Group("est16").
+		Order("est16").
+		Select(&two.Est16); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		Column("est18").
+		ColumnExpr("count(*) as nro").
+		Group("est18").
+		Order("est18").
+		Select(&two.Est18); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		Column("est19").
+		ColumnExpr("count(*) as nro").
+		Group("est19").
+		Order("est19").
+		Select(&two.Est19); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		Column("est21").
+		ColumnExpr("count(*) as nro").
+		Group("est21").
+		Order("est21").
+		Select(&two.Est21); err != nil {
+		return nil, err
+	}
+	resp := []respStruct{}
+	resp = append(resp, respStruct{"Aspectos Generales", one})
+	resp = append(resp, respStruct{"Vinculación con la Carrera", two})
+	return resp, nil
 }
