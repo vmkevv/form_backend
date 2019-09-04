@@ -156,122 +156,101 @@ func (fe *FormEst) GetByID() error {
 
 // GetQuestions get the form est questions all in one
 func (fe *FormEst) GetQuestions() (interface{}, error) {
-	var data interface{}
+	// GENERAL DATA STRUCTS
+	type option struct {
+		Opt string `sql:"opt" json:"opt"`
+		Qty string `json:"qty"`
+	}
+	type Select struct {
+		Title string   `json:"title"`
+		Opts  []option `sql:"opts" json:"opts"`
+	}
+	type SelectOption struct {
+		Title  string   `json:"title"`
+		Opts   []option `sql:"opts" json:"opts"`
+		Others []string `sql:"others" json:"others"`
+	}
+	// RESPONSES STRUCTS
 	type oneStruct struct {
-		Est4 []struct {
-			Est4 string `sql:"est4" json:"est4"`
-			Nro  string `json:"nro"`
-		} `json:"est4"`
-		Est10 []struct {
-			Est10 string `sql:"est10" json:"est10"`
-			Nro   string `json:"nro"`
-		} `json:"est10"`
-		Est11 []struct {
-			Est11 string `sql:"est11" json:"est11"`
-			Nro   string `json:"nro"`
-		} `json:"est11"`
-		Est13 []struct {
-			Est13 string `sql:"est13" json:"13"`
-			Nro   string `json:"nro"`
-		} `json:"est13"`
-		Est15 []struct {
-			Est15 string `sql:"est15" json:"15"`
-			Nro   string `json:"nro"`
-		} `json:"est15"`
+		Est4  Select       `json:"est4"`
+		Est10 Select       `json:"est10"`
+		Est11 Select       `json:"est11"`
+		Est13 SelectOption `json:"est13"`
+		Est14 SelectOption `json:"est14"`
+		Est15 Select       `json:"est15"`
 	}
 	type twoStruct struct {
-		Est16 []struct {
-			Est16 string `sql:"est16" json:"est16"`
-			Nro   string `json:"nro"`
-		} `json:"est16"`
-		Est18 []struct {
-			Est18 string `sql:"est18" json:"est18"`
-			Nro   string `json:"nro"`
-		} `json:"est18"`
-		Est19 []struct {
-			Est19 string `sql:"est19" json:"est19"`
-			Nro   string `json:"nro"`
-		} `json:"est19"`
-		Est21 []struct {
-			Est21 string `sql:"est21" json:"est21"`
-			Nro   string `json:"nro"`
-		} `json:"est21"`
+		Est16 Select `json:"est16"`
+		// Est18 SelectOption `json:"est18"`
 	}
 	type respStruct struct {
 		Name string      `json:"name"`
 		Data interface{} `json:"data"`
 	}
+	// TITLE DEFINITIONS STRUCTS
 	one := oneStruct{}
+	one.Est4.Title = "Número de estudiantes por semestre a la gestión."
+	one.Est10.Title = "Cantidad de estudiantes varones y cantidad de estudiantes mujeres."
+	one.Est11.Title = "Cantidad de estudiantes procedentes de unidades educativas fiscales, particulares y de convenio."
+	one.Est13.Title = "Residencia de los estudiantes."
+	one.Est14.Title = "Tipos de acceso a la red Internet."
+	one.Est15.Title = "Cantidad de estudiantes solteros, casados, divorciados y viudos."
 	two := twoStruct{}
-	errEst4 := DBCon.Model(fe).
-		Column("est4").
-		ColumnExpr("count(*) as nro").
-		Group("est4").
-		Select(&data)
-	if errEst4 != nil {
-		return nil, errEst4
-	}
+	two.Est16.Title = "Cantidad de estudiantes que ingresaron por curso pre-universitario, examen de dispensación, adminsión directa, traspaso o paralela."
+	// two.Est18.Title = "Top de áreas de preferencia de los estudiantes."
+
 	if err := DBCon.Model(fe).
-		Column("est10").
-		ColumnExpr("count(*) as nro").
-		Group("est10").
-		Select(&one.Est10); err != nil {
+		ColumnExpr("est4 as opt, count(*) as qty").
+		Group("est4").Select(&one.Est4.Opts); err != nil {
 		return nil, err
 	}
 	if err := DBCon.Model(fe).
-		Column("est11").
-		ColumnExpr("count(*) as nro").
-		Group("est11").
-		Select(&one.Est11); err != nil {
+		ColumnExpr("est10 as opt, count(*) as qty").
+		Group("est10").Select(&one.Est10.Opts); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		ColumnExpr("est11 as opt, count(*) as qty").
+		Group("est11").Select(&one.Est11.Opts); err != nil {
+		return nil, err
+	}
+	if err := DBCon.Model(fe).
+		ColumnExpr("est13 as opt, count(*) as qty").
+		Where("est13 ~ '^[0-9]+$'").
+		Group("est13").
+		Select(&one.Est13.Opts); err != nil {
 		return nil, err
 	}
 	if err := DBCon.Model(fe).
 		Column("est13").
-		ColumnExpr("count(*) as nro").
-		Group("est13").
-		Select(&one.Est13); err != nil {
+		Where("est13 !~ '^[0-9]+$'").
+		Select(&one.Est13.Others); err != nil {
 		return nil, err
 	}
 	if err := DBCon.Model(fe).
-		Column("est15").
-		ColumnExpr("count(*) as nro").
-		Group("est15").
-		Order("est15").
-		Select(&one.Est15); err != nil {
+		ColumnExpr("est14 as opt, count(*) as qty").
+		Where("est14 ~ '^[0-9]+$'").
+		Group("est14").
+		Select(&one.Est14.Opts); err != nil {
 		return nil, err
 	}
 	if err := DBCon.Model(fe).
-		Column("est16").
-		ColumnExpr("count(*) as nro").
-		Group("est16").
-		Order("est16").
-		Select(&two.Est16); err != nil {
+		Column("est14").
+		Where("est14 !~ '^[0-9]+$'").
+		Select(&one.Est14.Others); err != nil {
 		return nil, err
 	}
 	if err := DBCon.Model(fe).
-		Column("est18").
-		ColumnExpr("count(*) as nro").
-		Group("est18").
-		Order("est18").
-		Select(&two.Est18); err != nil {
+		ColumnExpr("est15 as opt, count(*) as qty").
+		Group("est15").Order("est15").Select(&one.Est15.Opts); err != nil {
 		return nil, err
 	}
 	if err := DBCon.Model(fe).
-		Column("est19").
-		ColumnExpr("count(*) as nro").
-		Group("est19").
-		Order("est19").
-		Select(&two.Est19); err != nil {
+		ColumnExpr("est16 as opt, count(*) as qty").
+		Group("est16").Order("est16").Select(&two.Est16.Opts); err != nil {
 		return nil, err
 	}
-	if err := DBCon.Model(fe).
-		Column("est21").
-		ColumnExpr("count(*) as nro").
-		Group("est21").
-		Order("est21").
-		Select(&two.Est21); err != nil {
-		return nil, err
-	}
+	// FINAL RESPONSE STRUCT BUILD
 	resp := []respStruct{}
 	resp = append(resp, respStruct{"Aspectos Generales", one})
 	resp = append(resp, respStruct{"Vinculación con la Carrera", two})

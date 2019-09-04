@@ -20,7 +20,6 @@ func main() {
 	r.Use(middleware.WithCors())
 
 	public := r.Group("/api")
-	public.GET("/some", handlers.GetEstQuestions)
 	public.POST("/login", handlers.Login)
 	public.POST("/student", handlers.SearchStudent)
 	public.GET("/user/forms/:id", handlers.GetFormList)
@@ -40,6 +39,7 @@ func main() {
 	admin.POST("/form/form-est", handlers.NewFormEst)
 	admin.PUT("/form/form-est", handlers.UpdateFormEst)
 	admin.DELETE("/form/form-est", handlers.DeleteFormEst)
+	admin.GET("/form-est", handlers.GetEstQuestions)
 
 	admin.GET("/form/form-pro/:nro", handlers.GetFormPro)
 	admin.GET("/form-pro/:id", handlers.GetFormProByID)
