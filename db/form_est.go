@@ -156,20 +156,6 @@ func (fe *FormEst) GetByID() error {
 
 // GetQuestions get the form est questions all in one
 func (fe *FormEst) GetQuestions() (interface{}, error) {
-	// GENERAL DATA STRUCTS
-	type option struct {
-		Opt string `sql:"opt" json:"opt"`
-		Qty string `json:"qty"`
-	}
-	type Select struct {
-		Title string   `json:"title"`
-		Opts  []option `sql:"opts" json:"opts"`
-	}
-	type SelectOption struct {
-		Title  string   `json:"title"`
-		Opts   []option `sql:"opts" json:"opts"`
-		Others []string `sql:"others" json:"others"`
-	}
 	// RESPONSES STRUCTS
 	type oneStruct struct {
 		Est4  Select       `json:"est4"`
@@ -198,56 +184,26 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	two := twoStruct{}
 	two.Est16.Title = "Cantidad de estudiantes que ingresaron por curso pre-universitario, examen de dispensación, adminsión directa, traspaso o paralela."
 	// two.Est18.Title = "Top de áreas de preferencia de los estudiantes."
+	if err := one.Est4.parseSimple("est4", fe); err != nil {
+		return nil, err
+	}
+	if err := one.Est10.parseSimple("est10", fe); err != nil {
+		return nil, err
+	}
+	if err := one.Est11.parseSimple("est11", fe); err != nil {
+		return nil, err
+	}
+	if err := one.Est13.parse("est13", fe); err != nil {
+		return nil, err
+	}
+	if err := one.Est14.parse("est14", fe); err != nil {
+		return nil, err
+	}
+	if err := one.Est15.parseSimple("est15", fe); err != nil {
+		return nil, err
+	}
 
-	if err := DBCon.Model(fe).
-		ColumnExpr("est4 as opt, count(*) as qty").
-		Group("est4").Select(&one.Est4.Opts); err != nil {
-		return nil, err
-	}
-	if err := DBCon.Model(fe).
-		ColumnExpr("est10 as opt, count(*) as qty").
-		Group("est10").Select(&one.Est10.Opts); err != nil {
-		return nil, err
-	}
-	if err := DBCon.Model(fe).
-		ColumnExpr("est11 as opt, count(*) as qty").
-		Group("est11").Select(&one.Est11.Opts); err != nil {
-		return nil, err
-	}
-	if err := DBCon.Model(fe).
-		ColumnExpr("est13 as opt, count(*) as qty").
-		Where("est13 ~ '^[0-9]+$'").
-		Group("est13").
-		Select(&one.Est13.Opts); err != nil {
-		return nil, err
-	}
-	if err := DBCon.Model(fe).
-		Column("est13").
-		Where("est13 !~ '^[0-9]+$'").
-		Select(&one.Est13.Others); err != nil {
-		return nil, err
-	}
-	if err := DBCon.Model(fe).
-		ColumnExpr("est14 as opt, count(*) as qty").
-		Where("est14 ~ '^[0-9]+$'").
-		Group("est14").
-		Select(&one.Est14.Opts); err != nil {
-		return nil, err
-	}
-	if err := DBCon.Model(fe).
-		Column("est14").
-		Where("est14 !~ '^[0-9]+$'").
-		Select(&one.Est14.Others); err != nil {
-		return nil, err
-	}
-	if err := DBCon.Model(fe).
-		ColumnExpr("est15 as opt, count(*) as qty").
-		Group("est15").Order("est15").Select(&one.Est15.Opts); err != nil {
-		return nil, err
-	}
-	if err := DBCon.Model(fe).
-		ColumnExpr("est16 as opt, count(*) as qty").
-		Group("est16").Order("est16").Select(&two.Est16.Opts); err != nil {
+	if err := two.Est16.parseSimple("est16", fe); err != nil {
 		return nil, err
 	}
 	// FINAL RESPONSE STRUCT BUILD
