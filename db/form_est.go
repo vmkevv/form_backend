@@ -166,8 +166,8 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 		Est15 Select       `json:"est15"`
 	}
 	type twoStruct struct {
-		Est16 Select `json:"est16"`
-		// Est18 SelectOption `json:"est18"`
+		Est16 Select   `json:"est16"`
+		Est18 Multiple `json:"est18"`
 	}
 	type respStruct struct {
 		Name string      `json:"name"`
@@ -183,7 +183,7 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	one.Est15.Title = "Cantidad de estudiantes solteros, casados, divorciados y viudos."
 	two := twoStruct{}
 	two.Est16.Title = "Cantidad de estudiantes que ingresaron por curso pre-universitario, examen de dispensación, adminsión directa, traspaso o paralela."
-	// two.Est18.Title = "Top de áreas de preferencia de los estudiantes."
+	two.Est18.Title = "Top de áreas de preferencia de los estudiantes."
 	if err := one.Est4.parseSimple("est4", fe); err != nil {
 		return nil, err
 	}
@@ -204,6 +204,9 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	}
 
 	if err := two.Est16.parseSimple("est16", fe); err != nil {
+		return nil, err
+	}
+	if err := two.Est18.parseMul("est18", fe); err != nil {
 		return nil, err
 	}
 	// FINAL RESPONSE STRUCT BUILD
