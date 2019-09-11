@@ -178,6 +178,10 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 		Est26 Select       `json:"est26"`
 		Est24 SelectOption `json:"est24"`
 		Est27 SelectOption `json:"est27"`
+		Est28 SelectOption `json:"est28"`
+		Est29 SelectOption `json:"est29"`
+		Est30 SelectOption `json:"est30"`
+		Est31 SelectOption `json:"est31"`
 	}
 	type respStruct struct {
 		Name string      `json:"name"`
@@ -203,6 +207,11 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	three.Est26.Title = "Cantidad de instituciones de alcance local, nacional e internacional"
 	three.Est24.Title = "Principales razones por las que los estudiantes trabajan"
 	three.Est27.Title = "Top de rubros de las instituciones en la que los estudiantes trabajan"
+	three.Est28.Title = "Top de cargos que ocupan los estudiantes que trabajan"
+	three.Est29.Title = "Top de formas de ingreso a instituciones donde los estudiantes trabajan"
+	three.Est30.Title = "Cantidad de estudiantes que trabajan en el sector estatal, privado o emprendimietos propios"
+	three.Est31.Title = "Principales actividades que desarrollan los estudiantes que trabajan."
+
 	if err := one.Est4.parseSimple("est4", fe); err != nil {
 		return nil, err
 	}
@@ -250,7 +259,19 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	if err := three.Est24.parseMul("est24", fe); err != nil {
 		return nil, err
 	}
-	if err := three.Est27.parseMul("est27", fe); err != nil {
+	if err := three.Est27.parse("est27", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est28.parse("est28", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est29.parse("est29", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est30.parse("est30", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est31.parseMul("est31", fe); err != nil {
 		return nil, err
 	}
 	// FINAL RESPONSE STRUCT BUILD
