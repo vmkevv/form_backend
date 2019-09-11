@@ -1,7 +1,7 @@
 package db
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -60,30 +60,39 @@ type Multiple struct {
 	Others []string       `sql:"data" json:"others"`
 }
 
-func (mul *Multiple) parseMul(field string, model interface{}) error {
-	mul.Opts = make(map[string]int)
+func (selopt *SelectOption) parseMul(field string, model interface{}) error {
+	opts := make(map[string]int)
+	var queryResults = []string{}
 	err := DBCon.Model(model).
-		ColumnExpr(field + " as data").Select(&mul.Others)
+		Column(field).Select(&queryResults)
 	if err != nil {
 		return err
 	}
-	for _, dat := range mul.Others {
+	for _, dat := range queryResults {
 		options := strings.Split(dat, ";")
-		fmt.Println("---------------")
 		// we make the process when lenght is 2, because the answers is empty otherwise
 		if len(options) == 2 {
 			numbers := strings.Split(options[0], ",")
 			// number holds the option number, send it to opts map
 			for _, number := range numbers {
-				if num, ok := mul.Opts[number]; ok {
-					mul.Opts[number] = num + 1
-				} else {
-					mul.Opts[number] = 1
-					// map[string]int{"bob": 5}
+				if len(number) <= 1 {
+					if num, ok := opts[number]; ok {
+						opts[number] = num + 1
+					} else {
+						opts[number] = 1
+					}
 				}
 			}
-			fmt.Println(options[1])
+			freeOptions := strings.Split(options[1], ",")
+			for _, freeOption := range freeOptions {
+				if freeOption != "" {
+					selopt.Others = append(selopt.Others, freeOption)
+				}
+			}
 		}
+	}
+	for key, val := range opts {
+		selopt.Opts = append(selopt.Opts, option{key, strconv.Itoa(val)})
 	}
 	return nil
 }
