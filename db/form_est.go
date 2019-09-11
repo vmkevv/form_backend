@@ -171,6 +171,14 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 		Est19 SelectOption `json:"est19"`
 		Est21 SelectOption `json:"est21"`
 	}
+	type threeStruct struct {
+		Est22 SelectOption `json:"est22"`
+		Est23 Select       `json:"est23"`
+		Est25 SelectOption `json:"est25"`
+		Est26 Select       `json:"est26"`
+		Est24 SelectOption `json:"est24"`
+		Est27 SelectOption `json:"est27"`
+	}
 	type respStruct struct {
 		Name string      `json:"name"`
 		Data interface{} `json:"data"`
@@ -188,6 +196,13 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	two.Est18.Title = "Top de áreas de preferencia de los estudiantes."
 	two.Est19.Title = "Principales razones por las que los estudiantes abandonan materias."
 	two.Est21.Title = "Principales razones por las que los estudiantes abandonan la carrera."
+	three := threeStruct{}
+	three.Est22.Title = "Cantidad de estudiantes que trabajan."
+	three.Est23.Title = "Relación del trabajo que tienen los estudiantes que trabajan con la carrera"
+	three.Est25.Title = "Tipo de empleo de los estudiantes que trabajan."
+	three.Est26.Title = "Cantidad de instituciones de alcance local, nacional e internacional"
+	three.Est24.Title = "Principales razones por las que los estudiantes trabajan"
+	three.Est27.Title = "Top de rubros de las instituciones en la que los estudiantes trabajan"
 	if err := one.Est4.parseSimple("est4", fe); err != nil {
 		return nil, err
 	}
@@ -219,9 +234,29 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	if err := two.Est21.parseMul("est21", fe); err != nil {
 		return nil, err
 	}
+
+	if err := three.Est22.parse("est22", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est23.parseSimple("est23", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est25.parse("est25", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est26.parseSimple("est26", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est24.parseMul("est24", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est27.parseMul("est27", fe); err != nil {
+		return nil, err
+	}
 	// FINAL RESPONSE STRUCT BUILD
 	resp := []respStruct{}
 	resp = append(resp, respStruct{"Aspectos Generales", one})
 	resp = append(resp, respStruct{"Vinculación con la Carrera", two})
+	resp = append(resp, respStruct{"Situación Laboral", three})
 	return resp, nil
 }
