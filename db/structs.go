@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+var types = struct {
+	Select   string
+	Multiple string
+}{
+	"select", "multiple",
+}
+
 // GENERAL DATA STRUCTS
 type option struct {
 	Opt string `sql:"opt" json:"opt"`
@@ -15,14 +22,22 @@ type option struct {
 type Select struct {
 	Title string   `json:"title"`
 	Opts  []option `sql:"opts" json:"opts"`
+	Total int      `json:"total"`
+	Type  string   `json:"type"`
 }
 
 func (sel *Select) parseSimple(field string, model interface{}) error {
+	sel.Type = types.Select
+	sel.Total = 0
 	err := DBCon.Model(model).
 		ColumnExpr(field + " as opt, count(*) as qty").
 		Group(field).Select(&sel.Opts)
 	if err != nil {
 		return nil
+	}
+	for _, item := range sel.Opts {
+		cant, _ := strconv.Atoi(item.Qty)
+		sel.Total = sel.Total + cant
 	}
 	return err
 }
@@ -32,9 +47,13 @@ type SelectOption struct {
 	Title  string   `json:"title"`
 	Opts   []option `sql:"opts" json:"opts"`
 	Others []string `sql:"others" json:"others"`
+	Type   string   `json:"type"`
+	Total  int      `json:"total"`
 }
 
 func (selopt *SelectOption) parse(field string, model interface{}) error {
+	selopt.Type = types.Select
+	selopt.Total = 0
 	err := DBCon.Model(model).
 		ColumnExpr(field + " as opt, count(*) as qty").
 		Where(field + " ~ '^[0-9]+$'").
@@ -43,6 +62,10 @@ func (selopt *SelectOption) parse(field string, model interface{}) error {
 	if err != nil {
 		return err
 	}
+	for _, item := range selopt.Opts {
+		number, _ := strconv.Atoi(item.Qty)
+		selopt.Total = selopt.Total + number
+	}
 	err = DBCon.Model(model).
 		Column(field).
 		Where(field + " !~ '^[0-9]+$'").
@@ -50,6 +73,7 @@ func (selopt *SelectOption) parse(field string, model interface{}) error {
 	if err != nil {
 		return err
 	}
+	selopt.Total = selopt.Total + len(selopt.Others)
 	return nil
 }
 
@@ -61,6 +85,7 @@ type Multiple struct {
 }
 
 func (selopt *SelectOption) parseMul(field string, model interface{}) error {
+	selopt.Type = types.Multiple
 	opts := make(map[string]int)
 	var queryResults = []string{}
 	err := DBCon.Model(model).
@@ -68,6 +93,7 @@ func (selopt *SelectOption) parseMul(field string, model interface{}) error {
 	if err != nil {
 		return err
 	}
+	selopt.Total = len(queryResults)
 	for _, dat := range queryResults {
 		options := strings.Split(dat, ";")
 		// we make the process when lenght is 2, because the answers is empty otherwise
