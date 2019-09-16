@@ -8,8 +8,9 @@ import (
 var types = struct {
 	Select   string
 	Multiple string
+	Likert   string
 }{
-	"select", "multiple",
+	"select", "multiple", "likert",
 }
 
 // GENERAL DATA STRUCTS
@@ -120,9 +121,11 @@ func (selopt *SelectOption) parseMul(field string, model interface{}) error {
 type Multiple struct {
 	Title string               `json:"title"`
 	Opts  []map[string]float32 `json:"opts"`
+	Type  string               `json:"type"`
 }
 
 func (mul *Multiple) parse(field string, model interface{}) error {
+	mul.Type = types.Likert
 	var queryResults = []string{}
 	err := DBCon.Model(model).Column(field).Select(&queryResults)
 	if err != nil {
