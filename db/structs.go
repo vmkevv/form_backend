@@ -77,13 +77,6 @@ func (selopt *SelectOption) parse(field string, model interface{}) error {
 	return nil
 }
 
-// Multiple handles response struct to multiple options
-type Multiple struct {
-	Title  string         `json:"title"`
-	Opts   map[string]int `json:"opts"`
-	Others []string       `sql:"data" json:"others"`
-}
-
 func (selopt *SelectOption) parseMul(field string, model interface{}) error {
 	selopt.Type = types.Multiple
 	opts := make(map[string]int)
@@ -119,6 +112,53 @@ func (selopt *SelectOption) parseMul(field string, model interface{}) error {
 	}
 	for key, val := range opts {
 		selopt.Opts = append(selopt.Opts, option{key, strconv.Itoa(val)})
+	}
+	return nil
+}
+
+// Multiple handles response struct to multiple options
+type Multiple struct {
+	Title string               `json:"title"`
+	Opts  []map[string]float32 `json:"opts"`
+}
+
+func (mul *Multiple) parse(field string, model interface{}) error {
+	var queryResults = []string{}
+	err := DBCon.Model(model).Column(field).Select(&queryResults)
+	if err != nil {
+		return err
+	}
+	for _, dat := range queryResults {
+		if dat == "" {
+			continue
+		}
+		numbers := strings.Split(dat, ",")
+		for key, number := range numbers {
+			if len(mul.Opts) < key+1 {
+				mul.Opts = append(mul.Opts, make(map[string]float32))
+			}
+			if val, ok := mul.Opts[key][number]; ok {
+				mul.Opts[key][number] = val + 1.0
+			} else {
+				mul.Opts[key][number] = 1.0
+			}
+		}
+	}
+	for index, opt := range mul.Opts {
+		var sum float32
+		var total float32
+		for key, val := range opt {
+			if key == "0" {
+				continue
+			}
+			keyInt, err := strconv.Atoi(key)
+			if err != nil {
+				return err
+			}
+			sum = sum + float32(keyInt)*val
+			total = total + val
+		}
+		mul.Opts[index]["media"] = sum / total
 	}
 	return nil
 }

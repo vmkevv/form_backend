@@ -182,6 +182,7 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 		Est29 SelectOption `json:"est29"`
 		Est30 SelectOption `json:"est30"`
 		Est31 SelectOption `json:"est31"`
+		Est32 Multiple     `json:"est32"`
 	}
 	type respStruct struct {
 		Name string      `json:"name"`
@@ -211,6 +212,7 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	three.Est29.Title = "Top de formas de ingreso a instituciones donde los estudiantes trabajan"
 	three.Est30.Title = "Cantidad de estudiantes que trabajan en el sector estatal, privado o emprendimietos propios"
 	three.Est31.Title = "Principales actividades que desarrollan los estudiantes que trabajan."
+	three.Est32.Title = "Aspectos de su formación laboral que son útiles en su desempeño laboral."
 
 	if err := one.Est4.parseSimple("est4", fe); err != nil {
 		return nil, err
@@ -272,6 +274,9 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 		return nil, err
 	}
 	if err := three.Est31.parseMul("est31", fe); err != nil {
+		return nil, err
+	}
+	if err := three.Est32.parse("est32", fe); err != nil {
 		return nil, err
 	}
 	// FINAL RESPONSE STRUCT BUILD
