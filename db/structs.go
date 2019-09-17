@@ -6,11 +6,12 @@ import (
 )
 
 var types = struct {
-	Select   string
-	Multiple string
-	Likert   string
+	Select      string
+	Multiple    string
+	LikertBar   string
+	LikertRadar string
 }{
-	"select", "multiple", "likert",
+	"select", "multiple", "likertBar", "likertRadar",
 }
 
 // GENERAL DATA STRUCTS
@@ -124,8 +125,12 @@ type Multiple struct {
 	Type  string               `json:"type"`
 }
 
-func (mul *Multiple) parse(field string, model interface{}) error {
-	mul.Type = types.Likert
+func (mul *Multiple) parse(field string, model interface{}, radar bool) error {
+	if radar {
+		mul.Type = types.LikertRadar
+	} else {
+		mul.Type = types.LikertBar
+	}
 	var queryResults = []string{}
 	err := DBCon.Model(model).Column(field).Select(&queryResults)
 	if err != nil {

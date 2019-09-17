@@ -184,6 +184,23 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 		Est31 SelectOption `json:"est31"`
 		Est32 Multiple     `json:"est32"`
 	}
+	type fourStruct struct {
+		Est33 Multiple `json:"est33"`
+		Est34 Multiple `json:"est34"`
+	}
+	type fiveStruct struct {
+		Est36 Multiple `json:"est36"`
+	}
+	type sixStruct struct {
+		Est43 Multiple `json:"est43"`
+	}
+	type sevenStruct struct {
+		Est45 Multiple     `json:"est45"`
+		Est47 Multiple     `json:"est47"`
+		Est48 SelectOption `json:"est48"`
+		Est49 SelectOption `json:"est49"`
+	}
+
 	type respStruct struct {
 		Name string      `json:"name"`
 		Data interface{} `json:"data"`
@@ -213,6 +230,18 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	three.Est30.Title = "Cantidad de estudiantes que trabajan en el sector estatal, privado o emprendimietos propios"
 	three.Est31.Title = "Principales actividades que desarrollan los estudiantes que trabajan."
 	three.Est32.Title = "Aspectos de su formación laboral que son útiles en su desempeño laboral."
+	four := fourStruct{}
+	four.Est33.Title = "Capacidades del licenciado en Informática, perfil (1998)"
+	four.Est34.Title = "Perfil profesional actual y futura"
+	five := fiveStruct{}
+	five.Est36.Title = "Media likerts plan de estudios actual"
+	six := sixStruct{}
+	six.Est43.Title = "Media likerts Infraestructura"
+	seven := sevenStruct{}
+	seven.Est45.Title = "Licenciado en Informática"
+	seven.Est47.Title = "Denominaciones de la carrera."
+	seven.Est48.Title = "La especialización en el área de Informática, debería hacerse:"
+	seven.Est49.Title = "¿Qué modalidades de graduación elegiría?"
 
 	if err := one.Est4.parseSimple("est4", fe); err != nil {
 		return nil, err
@@ -276,7 +305,35 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	if err := three.Est31.parseMul("est31", fe); err != nil {
 		return nil, err
 	}
-	if err := three.Est32.parse("est32", fe); err != nil {
+	if err := three.Est32.parse("est32", fe, false); err != nil {
+		return nil, err
+	}
+
+	if err := four.Est33.parse("est33", fe, false); err != nil {
+		return nil, err
+	}
+	if err := four.Est34.parse("est34", fe, false); err != nil {
+		return nil, err
+	}
+
+	if err := five.Est36.parse("est36", fe, false); err != nil {
+		return nil, err
+	}
+
+	if err := six.Est43.parse("est43", fe, true); err != nil {
+		return nil, err
+	}
+
+	if err := seven.Est45.parse("est45", fe, false); err != nil {
+		return nil, err
+	}
+	if err := seven.Est47.parse("est47", fe, true); err != nil {
+		return nil, err
+	}
+	if err := seven.Est48.parse("est48", fe); err != nil {
+		return nil, err
+	}
+	if err := seven.Est49.parseMul("est49", fe); err != nil {
 		return nil, err
 	}
 	// FINAL RESPONSE STRUCT BUILD
@@ -284,5 +341,9 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 	resp = append(resp, respStruct{"Aspectos Generales", one})
 	resp = append(resp, respStruct{"Vinculación con la Carrera", two})
 	resp = append(resp, respStruct{"Situación Laboral", three})
+	resp = append(resp, respStruct{"Perfil Profesional Acual", four})
+	resp = append(resp, respStruct{"Planes de Estudio Actual", five})
+	resp = append(resp, respStruct{"Infraestructura", six})
+	resp = append(resp, respStruct{"Grados, Titulación y Menciones", seven})
 	return resp, nil
 }
