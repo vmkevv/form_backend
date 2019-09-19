@@ -96,7 +96,7 @@ func (selopt *SelectOption) parseMul(field string, model interface{}) error {
 			numbers := strings.Split(options[0], ",")
 			// number holds the option number, send it to opts map
 			for _, number := range numbers {
-				if len(number) <= 1 {
+				if _, err := strconv.Atoi(number); err == nil {
 					if num, ok := opts[number]; ok {
 						opts[number] = num + 1
 					} else {
