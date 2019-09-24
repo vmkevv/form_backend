@@ -217,10 +217,6 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 		Est60 SelectOption `json:"est60"`
 	}
 
-	type respStruct struct {
-		Name string      `json:"name"`
-		Data interface{} `json:"data"`
-	}
 	// TITLE DEFINITIONS STRUCTS
 	one := oneStruct{}
 	one.Est4.Title = "Número de estudiantes por semestre a la gestión."
@@ -399,16 +395,16 @@ func (fe *FormEst) GetQuestions() (interface{}, error) {
 		return nil, err
 	}
 	// FINAL RESPONSE STRUCT BUILD
-	resp := []respStruct{}
-	resp = append(resp, respStruct{"Aspectos Generales", one})
-	resp = append(resp, respStruct{"Vinculación con la Carrera", two})
-	resp = append(resp, respStruct{"Situación Laboral", three})
-	resp = append(resp, respStruct{"Perfil Profesional Acual", four})
-	resp = append(resp, respStruct{"Planes de Estudio Actual", five})
-	resp = append(resp, respStruct{"Infraestructura", six})
-	resp = append(resp, respStruct{"Grados, Titulación y Menciones", seven})
-	resp = append(resp, respStruct{"Áreas de Conocimiento", eight})
-	resp = append(resp, respStruct{"Competencias del Profesional en el Área de Informática y Sistemas", nine})
-	resp = append(resp, respStruct{"Aspiraciones Futuras", ten})
+	resp := []RespStruct{}
+	resp = append(resp, RespStruct{"Aspectos Generales", one})
+	resp = append(resp, RespStruct{"Vinculación con la Carrera", two})
+	resp = append(resp, RespStruct{"Situación Laboral", three})
+	resp = append(resp, RespStruct{"Perfil Profesional Actual", four})
+	resp = append(resp, RespStruct{"Planes de Estudio Actual", five})
+	resp = append(resp, RespStruct{"Infraestructura", six})
+	resp = append(resp, RespStruct{"Grados, Titulación y Menciones", seven})
+	resp = append(resp, RespStruct{"Áreas de Conocimiento", eight})
+	resp = append(resp, RespStruct{"Competencias del Profesional en el Área de Informática y Sistemas", nine})
+	resp = append(resp, RespStruct{"Aspiraciones Futuras", ten})
 	return resp, nil
 }

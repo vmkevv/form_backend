@@ -46,6 +46,7 @@ func main() {
 	admin.POST("/form/form-pro", handlers.NewFormPro)
 	admin.PUT("/form/form-pro", handlers.UpdateFormPro)
 	admin.DELETE("/form/form-pro", handlers.DeleteFormPro)
+	admin.GET("/form-pro", handlers.GetProQuestions)
 
 	admin.GET("/form/form-pre/:nro", handlers.GetFormPre)
 	admin.GET("/form-pre/:id", handlers.GetFormPreByID)

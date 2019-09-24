@@ -14,6 +14,12 @@ var types = struct {
 	"select", "multiple", "likertBar", "likertRadar",
 }
 
+// RespStruct main struct for responses
+type RespStruct struct {
+	Name string      `json:"name"`
+	Data interface{} `json:"data"`
+}
+
 // GENERAL DATA STRUCTS
 type option struct {
 	Opt string `sql:"opt" json:"opt"`

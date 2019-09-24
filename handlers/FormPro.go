@@ -133,3 +133,20 @@ func GetFormProByID(c *gin.Context) {
 		},
 	)
 }
+
+// GetProQuestions get profesional questions
+func GetProQuestions(c *gin.Context) {
+	formPro := db.FormPro{}
+	res, err := formPro.GetQuestions()
+	if err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{
+			"res": res,
+		},
+	)
+}

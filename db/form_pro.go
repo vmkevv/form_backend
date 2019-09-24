@@ -142,3 +142,151 @@ func (fpro *FormPro) GetByID() error {
 	}
 	return nil
 }
+
+// GetQuestions get the form pro questions
+func (fpro *FormPro) GetQuestions() (interface{}, error) {
+	type oneStruct struct {
+		Pro7  Select       `json:"pro7"`
+		Pro8  Select       `json:"pro8"`
+		Pro9  SelectOption `json:"pro9"`
+		Pro10 Select       `json:"pro10"`
+		Pro16 SelectOption `json:"pro16"`
+	}
+	type twoStruct struct {
+		Pro18 Select       `json:"pro18"`
+		Pro21 SelectOption `json:"pro21"`
+		Pro22 Select       `json:"pro22"`
+		Pro23 Select       `json:"pro23"`
+		Pro24 Select       `json:"pro24"`
+		Pro25 SelectOption `json:"pro25"`
+		Pro26 SelectOption `json:"pro26"`
+		Pro27 SelectOption `json:"pro27"`
+		Pro28 SelectOption `json:"pro28"`
+		Pro29 SelectOption `json:"pro29"`
+		Pro30 SelectOption `json:"pro30"`
+		Pro31 Multiple     `json:"pro31"`
+	}
+	type threeStruct struct {
+		Pro32 Multiple `json:"pro32"`
+	}
+	type fourStruct struct {
+		Pro34 Multiple `json:"pro34"`
+	}
+	type fiveStruct struct {
+		Pro39 Multiple     `json:"pro39"`
+		Pro41 SelectOption `json:"pro41"`
+		Pro42 SelectOption `json:"pro42"`
+		Pro43 SelectOption `json:"pro43"`
+	}
+
+	one := oneStruct{}
+	one.Pro7.Title = "Género"
+	one.Pro8.Title = "Estado civil"
+	one.Pro9.Title = "Universidad donde se tituló"
+	one.Pro10.Title = "Rango de edad"
+	one.Pro16.Title = "Certificaciones con las que cuenta."
+	two := twoStruct{}
+	two.Pro18.Title = "Actualmente, trabaja:"
+	two.Pro21.Title = "Prestaciones laborales"
+	two.Pro22.Title = "Relación de su trabajo con el área de Informática"
+	two.Pro23.Title = "Salario mensual en Bolivianos"
+	two.Pro24.Title = "Alcance de la institución"
+	two.Pro25.Title = "Tipos de empleo"
+	two.Pro26.Title = "Rubro o actividad de la institución"
+	two.Pro27.Title = "Cargo que ocupa"
+	two.Pro28.Title = "Forma de ingreso a la institución"
+	two.Pro29.Title = "Tipo de institución"
+	two.Pro30.Title = "Actividades que desarrolla en su trabajo"
+	two.Pro31.Title = "Aspectos de su formación académica que son útiles en su desempeño laboral"
+	three := threeStruct{}
+	three.Pro32.Title = "Perfil profesional en el mercado laboral."
+	four := fourStruct{}
+	four.Pro34.Title = "Plan de estudios."
+	five := fiveStruct{}
+	five.Pro39.Title = "Respecto al mercado laboral"
+	five.Pro41.Title = "¿Qué denominaciones considera que son y serán requeridas por el mercado laboral?"
+	five.Pro42.Title = "La especialización en el área de Informática debería hacerse:"
+	five.Pro43.Title = "¿Con cuál de las siguientes modalidades se tituló?"
+
+	if err := one.Pro7.parseSimple("pro7", fpro); err != nil {
+		return nil, err
+	}
+	if err := one.Pro8.parseSimple("pro8", fpro); err != nil {
+		return nil, err
+	}
+	if err := one.Pro9.parse("pro9", fpro); err != nil {
+		return nil, err
+	}
+	if err := one.Pro10.parseSimple("pro10", fpro); err != nil {
+		return nil, err
+	}
+	if err := one.Pro16.parseMul("pro16", fpro); err != nil {
+		return nil, err
+	}
+
+	if err := two.Pro18.parseSimple("pro18", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro21.parseMul("pro21", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro22.parseSimple("pro22", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro23.parseSimple("pro23", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro24.parseSimple("pro24", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro25.parse("pro25", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro26.parse("pro26", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro27.parseMul("pro27", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro28.parse("pro28", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro29.parse("pro29", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro30.parseMul("pro30", fpro); err != nil {
+		return nil, err
+	}
+	if err := two.Pro31.parse("pro31", fpro, false); err != nil {
+		return nil, err
+	}
+
+	if err := three.Pro32.parse("pro32", fpro, false); err != nil {
+		return nil, err
+	}
+
+	if err := four.Pro34.parse("pro34", fpro, false); err != nil {
+		return nil, err
+	}
+
+	if err := five.Pro39.parse("pro39", fpro, false); err != nil {
+		return nil, err
+	}
+	if err := five.Pro41.parseMul("pro41", fpro); err != nil {
+		return nil, err
+	}
+	if err := five.Pro42.parse("pro42", fpro); err != nil {
+		return nil, err
+	}
+	if err := five.Pro43.parse("pro43", fpro); err != nil {
+		return nil, err
+	}
+
+	resp := []RespStruct{}
+	resp = append(resp, RespStruct{"Aspectos Generales", one})
+	resp = append(resp, RespStruct{"Situación Laboral", two})
+	resp = append(resp, RespStruct{"Perfil Profesional", three})
+	resp = append(resp, RespStruct{"Plan de Estudios con el que se Formó", four})
+	resp = append(resp, RespStruct{"Grados, Titulación y Menciones", five})
+	return resp, nil
+}
