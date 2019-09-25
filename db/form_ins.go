@@ -135,3 +135,136 @@ func (fins *FormIns) GetByID() error {
 	}
 	return nil
 }
+
+// GetQuestions get form ins question reports
+func (fins *FormIns) GetQuestions() (interface{}, error) {
+	type oneStruct struct {
+		Ins8  SelectOption `json:"ins8"`
+		Ins9  SelectOption `json:"ins9"`
+		Ins10 Select       `json:"ins10"`
+		Ins11 Select       `json:"ins11"`
+	}
+	type twoStruct struct {
+		Ins14 SelectOption `json:"ins14"`
+		Ins16 SelectOption `json:"ins16"`
+	}
+	type threeStruct struct {
+		Ins17 Multiple `json:"ins17"`
+	}
+	type fourStruct struct {
+		Ins19 Multiple `json:"ins19"`
+	}
+	type fiveStruct struct {
+		Ins24 Multiple     `json:"ins24"`
+		Ins26 SelectOption `json:"ins26"`
+	}
+	type sixStruct struct {
+		Ins27 SelectOption `json:"ins27"`
+		Ins28 SelectOption `json:"ins28"`
+		Ins29 SelectOption `json:"ins29"`
+		Ins30 SelectOption `json:"ins30"`
+		Ins31 SelectOption `json:"ins31"`
+	}
+	type sevenStruct struct {
+		Ins32 Multiple     `json:"ins32"`
+		Ins33 Multiple     `json:"ins33"`
+		Ins34 SelectOption `json:"ins34"`
+	}
+
+	one := oneStruct{}
+	one.Ins8.Title = "Tipo de institución"
+	one.Ins9.Title = "Rubro de la institución"
+	one.Ins10.Title = "Nro de empleados en la institución"
+	one.Ins11.Title = "Alcance de la institución"
+	two := twoStruct{}
+	two.Ins14.Title = "Forma en que se accede a los cargos"
+	two.Ins16.Title = "Principales actividades que desarrolla el personal del área de Informática y Sistemas en la institución"
+	three := threeStruct{}
+	three.Ins17.Title = "Mercado laboral"
+	four := fourStruct{}
+	four.Ins19.Title = "Planes de Estudio"
+	five := fiveStruct{}
+	five.Ins24.Title = "Valoración"
+	five.Ins26.Title = "¿Qué denominaciones considera que son y serán requeridas por el mercado laboral?"
+	six := sixStruct{}
+	six.Ins27.Title = "Lenguages de programación que utiliza la institución"
+	six.Ins28.Title = "Gestores de base de datos que utiliza la institución"
+	six.Ins29.Title = "Metodologías de desarrollo de sistemas que utiliza la institución"
+	six.Ins30.Title = "Sistemas Operativos que utiliza la institución"
+	six.Ins31.Title = "Frameworks que utiliza la institución"
+	seven := sevenStruct{}
+	seven.Ins32.Title = "Competencias generales que busca la institución"
+	seven.Ins33.Title = "Competencias específicas que busca la institución"
+	seven.Ins34.Title = "Áreas y tecnologías que tienen y tendrán mayor impacto en el mercado laboral"
+
+	if err := one.Ins8.parse("ins8", fins); err != nil {
+		return nil, err
+	}
+	if err := one.Ins9.parseMul("ins9", fins); err != nil {
+		return nil, err
+	}
+	if err := one.Ins10.parseSimple("ins10", fins); err != nil {
+		return nil, err
+	}
+	if err := one.Ins11.parseSimple("ins11", fins); err != nil {
+		return nil, err
+	}
+
+	if err := two.Ins14.parseMul("ins14", fins); err != nil {
+		return nil, err
+	}
+	if err := two.Ins16.parseMul("ins16", fins); err != nil {
+		return nil, err
+	}
+
+	if err := three.Ins17.parse("ins17", fins, false); err != nil {
+		return nil, err
+	}
+
+	if err := four.Ins19.parse("ins19", fins, false); err != nil {
+		return nil, err
+	}
+
+	if err := five.Ins24.parse("ins24", fins, false); err != nil {
+		return nil, err
+	}
+	if err := five.Ins26.parseMul("ins24", fins); err != nil {
+		return nil, err
+	}
+
+	if err := six.Ins27.parseMul("ins27", fins); err != nil {
+		return nil, err
+	}
+	if err := six.Ins28.parseMul("ins28", fins); err != nil {
+		return nil, err
+	}
+	if err := six.Ins29.parseMul("ins29", fins); err != nil {
+		return nil, err
+	}
+	if err := six.Ins30.parseMul("ins30", fins); err != nil {
+		return nil, err
+	}
+	if err := six.Ins31.parseMul("ins31", fins); err != nil {
+		return nil, err
+	}
+
+	if err := seven.Ins32.parse("ins32", fins, true); err != nil {
+		return nil, err
+	}
+	if err := seven.Ins33.parse("ins33", fins, true); err != nil {
+		return nil, err
+	}
+	if err := seven.Ins34.parseMul("ins34", fins); err != nil {
+		return nil, err
+	}
+
+	resp := []RespStruct{}
+	resp = append(resp, RespStruct{"Aspectos Generales", one})
+	resp = append(resp, RespStruct{"Aspectos Laborales", two})
+	resp = append(resp, RespStruct{"Perfil Profesional", three})
+	resp = append(resp, RespStruct{"Planes de Estudio", four})
+	resp = append(resp, RespStruct{"Grados, Titulación y Menciones", five})
+	resp = append(resp, RespStruct{"Áreas de Conocimiento", six})
+	resp = append(resp, RespStruct{"Competencias del Profesional en el Área de Informática y Sistemas", seven})
+	return resp, nil
+}

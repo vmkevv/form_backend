@@ -178,6 +178,21 @@ func (fpro *FormPro) GetQuestions() (interface{}, error) {
 		Pro42 SelectOption `json:"pro42"`
 		Pro43 SelectOption `json:"pro43"`
 	}
+	type sixStruct struct {
+		Pro44 SelectOption `json:"pro44"`
+		Pro45 SelectOption `json:"pro45"`
+		Pro46 SelectOption `json:"pro46"`
+		Pro47 SelectOption `json:"pro47"`
+		Pro48 SelectOption `json:"pro48"`
+	}
+	type sevenStruct struct {
+		Pro49 Multiple     `json:"pro49"`
+		Pro50 Multiple     `json:"pro50"`
+		Pro51 SelectOption `json:"pro51"`
+	}
+	type eightStruct struct {
+		Pro52 SelectOption `json:"pro52"`
+	}
 
 	one := oneStruct{}
 	one.Pro7.Title = "Género"
@@ -207,6 +222,18 @@ func (fpro *FormPro) GetQuestions() (interface{}, error) {
 	five.Pro41.Title = "¿Qué denominaciones considera que son y serán requeridas por el mercado laboral?"
 	five.Pro42.Title = "La especialización en el área de Informática debería hacerse:"
 	five.Pro43.Title = "¿Con cuál de las siguientes modalidades se tituló?"
+	six := sixStruct{}
+	six.Pro44.Title = "Lenguajes de programación que utiliza en su trabajo"
+	six.Pro45.Title = "Gestores de base de datos que utiliza en su trabajo"
+	six.Pro46.Title = "Metodologías de desarrollo de sistemas que utiliza en su trabajo"
+	six.Pro47.Title = "Sistemas operativos que utiliza en su trabajo"
+	six.Pro48.Title = "Frameworks que utiliza en su trabajo"
+	seven := sevenStruct{}
+	seven.Pro49.Title = "Competencias generales que se busca en el mercado laboral profesional"
+	seven.Pro50.Title = "Competencias específicas que se busca en el mercado laboral profesional"
+	seven.Pro51.Title = "¿Cuáles son las áreas y tecnologías que tienen y tendrán mayor impacto en el mercado laboral?"
+	eight := eightStruct{}
+	eight.Pro52.Title = "El los siguientes 5 años te gustaría trabajar en:"
 
 	if err := one.Pro7.parseSimple("pro7", fpro); err != nil {
 		return nil, err
@@ -282,11 +309,45 @@ func (fpro *FormPro) GetQuestions() (interface{}, error) {
 		return nil, err
 	}
 
+	if err := six.Pro44.parseMul("pro44", fpro); err != nil {
+		return nil, err
+	}
+	if err := six.Pro45.parseMul("pro45", fpro); err != nil {
+		return nil, err
+	}
+	if err := six.Pro46.parseMul("pro46", fpro); err != nil {
+		return nil, err
+	}
+	if err := six.Pro47.parseMul("pro47", fpro); err != nil {
+		return nil, err
+	}
+	if err := six.Pro48.parseMul("pro48", fpro); err != nil {
+		return nil, err
+	}
+
+	if err := seven.Pro49.parse("pro49", fpro, true); err != nil {
+		return nil, err
+	}
+	if err := seven.Pro50.parse("pro50", fpro, true); err != nil {
+		return nil, err
+	}
+	if err := seven.Pro51.parseMul("pro51", fpro); err != nil {
+		return nil, err
+	}
+
+	if err := eight.Pro52.parseMul("pro52", fpro); err != nil {
+		return nil, err
+	}
+
 	resp := []RespStruct{}
 	resp = append(resp, RespStruct{"Aspectos Generales", one})
 	resp = append(resp, RespStruct{"Situación Laboral", two})
 	resp = append(resp, RespStruct{"Perfil Profesional", three})
 	resp = append(resp, RespStruct{"Plan de Estudios con el que se Formó", four})
 	resp = append(resp, RespStruct{"Grados, Titulación y Menciones", five})
+	resp = append(resp, RespStruct{"Áreas de Conocimiento", six})
+	resp = append(resp, RespStruct{"Competencias del Profesional en el Área de Informática y Sistemas", seven})
+	resp = append(resp, RespStruct{"Aspiraciones Futuras", eight})
+
 	return resp, nil
 }

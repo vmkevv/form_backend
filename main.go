@@ -59,12 +59,14 @@ func main() {
 	admin.POST("/form/form-doc", handlers.NewFormDoc)
 	admin.PUT("/form/form-doc", handlers.UpdateFormDoc)
 	admin.DELETE("/form/form-doc", handlers.DeleteFormDoc)
+	admin.GET("/form-doc", handlers.GetDocQuestions)
 
 	admin.GET("/form/form-ins/:nro", handlers.GetFormIns)
 	admin.GET("/form-ins/:id", handlers.GetFormInsByID)
 	admin.POST("/form/form-ins", handlers.NewFormIns)
 	admin.PUT("/form/form-ins", handlers.UpdateFormIns)
 	admin.DELETE("/form/form-ins", handlers.DeleteFormIns)
+	admin.GET("/form-ins", handlers.GetInsQuestions)
 
 	r.GET("/", hello)
 	r.Run(":4000") // listen and serve on 0.0.0.0:8080

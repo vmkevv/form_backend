@@ -135,3 +135,20 @@ func GetFormDocByID(c *gin.Context) {
 		},
 	)
 }
+
+// GetDocQuestions get docentes questions
+func GetDocQuestions(c *gin.Context) {
+	formDoc := db.FormDoc{}
+	res, err := formDoc.GetQuestions()
+	if err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{
+			"res": res,
+		},
+	)
+}

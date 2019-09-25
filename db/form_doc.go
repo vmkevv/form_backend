@@ -134,3 +134,162 @@ func (fdoc *FormDoc) GetByID() error {
 	}
 	return nil
 }
+
+// GetQuestions get all questions
+func (fdoc *FormDoc) GetQuestions() (interface{}, error) {
+	type oneStruct struct {
+		Doc5 Select       `json:"doc5"`
+		Doc6 SelectOption `json:"doc6"`
+		Doc7 SelectOption `json:"doc7"`
+		Doc8 Select       `json:"doc8"`
+		Doc9 SelectOption `json:"doc9"`
+	}
+	type twoStruct struct {
+		Doc16 SelectOption `json:"doc16"`
+		Doc17 SelectOption `json:"doc17"`
+	}
+	type threeStruct struct {
+		Doc18 Multiple `json:"doc18"`
+		Doc19 Multiple `json:"doc19"`
+	}
+	type fourStruct struct {
+		Doc21 Multiple `json:"doc21"`
+	}
+	type fiveStruct struct {
+		Doc28 Multiple `json:"doc28"`
+	}
+	type sixStruct struct {
+		Doc30 Multiple     `json:"doc30"`
+		Doc32 Multiple     `json:"doc32"`
+		Doc33 SelectOption `json:"doc33"`
+		Doc34 SelectOption `json:"doc34"`
+		Doc36 SelectOption `json:"doc36"`
+	}
+	type sevenStruct struct {
+		Doc37 SelectOption `json:"doc37"`
+		Doc38 SelectOption `json:"doc38"`
+		Doc39 SelectOption `json:"doc39"`
+		Doc40 SelectOption `json:"doc40"`
+		Doc41 SelectOption `json:"doc41"`
+	}
+	type eightStruct struct {
+		Doc42 Multiple     `json:"doc42"`
+		Doc43 Multiple     `json:"doc43"`
+		Doc44 SelectOption `json:"doc44"`
+	}
+	one := oneStruct{}
+	one.Doc5.Title = "Género"
+	one.Doc6.Title = "Residencia actual"
+	one.Doc7.Title = "Universidad dónde se tituló"
+	one.Doc8.Title = "Procedencia"
+	one.Doc9.Title = "Profesiones"
+	two := twoStruct{}
+	two.Doc16.Title = "Categoría docente"
+	two.Doc17.Title = "Áreas en las que se desempeña actualmente"
+	three := threeStruct{}
+	three.Doc18.Title = "Capacidades del licenciado en Informática"
+	three.Doc19.Title = "Licenciado en informática y la realidad actual"
+	four := fourStruct{}
+	four.Doc21.Title = "Características del plan de estudios actual"
+	five := fiveStruct{}
+	five.Doc28.Title = "Características infraestructura"
+	six := sixStruct{}
+	six.Doc30.Title = "Menciones y mercado laboral"
+	six.Doc32.Title = "Denominaciones de carreras en el área de Informática"
+	six.Doc33.Title = "La especialización en el área de Informática debería hacerse:"
+	six.Doc34.Title = "Modalidades de gracuación adecuadas para la carrera"
+	six.Doc36.Title = "Cuánto demora un estudiante en realizar su trabajo de grado"
+	seven := sevenStruct{}
+	seven.Doc37.Title = "En cuanto a lenguages de programación"
+	seven.Doc38.Title = "En cuanto a gestores de bases de datos"
+	seven.Doc39.Title = "En cuanto a metodologías de desarrollo de sistemas"
+	seven.Doc40.Title = "En cuanto a sistemas operativos"
+	seven.Doc41.Title = "En cuanto a Frameworks"
+	eight := eightStruct{}
+	eight.Doc42.Title = "Competencias generales que debe tener el profesional en informática"
+	eight.Doc43.Title = "Competencias específicas que debe tener el profesional en informática"
+	eight.Doc44.Title = "Líneas de investigación"
+	if err := one.Doc5.parseSimple("doc5", fdoc); err != nil {
+		return nil, err
+	}
+	if err := one.Doc6.parse("doc6", fdoc); err != nil {
+		return nil, err
+	}
+	if err := one.Doc7.parseMul("doc7", fdoc); err != nil {
+		return nil, err
+	}
+	if err := one.Doc8.parseSimple("doc8", fdoc); err != nil {
+		return nil, err
+	}
+	if err := one.Doc9.parseMul("doc9", fdoc); err != nil {
+		return nil, err
+	}
+	if err := two.Doc16.parseMul("doc16", fdoc); err != nil {
+		return nil, err
+	}
+	if err := two.Doc17.parseMul("doc17", fdoc); err != nil {
+		return nil, err
+	}
+	if err := three.Doc18.parse("doc18", fdoc, false); err != nil {
+		return nil, err
+	}
+	if err := three.Doc19.parse("doc19", fdoc, false); err != nil {
+		return nil, err
+	}
+	if err := four.Doc21.parse("doc21", fdoc, false); err != nil {
+		return nil, err
+	}
+	if err := five.Doc28.parse("doc28", fdoc, false); err != nil {
+		return nil, err
+	}
+	if err := six.Doc30.parse("doc30", fdoc, false); err != nil {
+		return nil, err
+	}
+	if err := six.Doc32.parse("doc32", fdoc, false); err != nil {
+		return nil, err
+	}
+	if err := six.Doc33.parse("doc33", fdoc); err != nil {
+		return nil, err
+	}
+	if err := six.Doc34.parseMul("doc34", fdoc); err != nil {
+		return nil, err
+	}
+	if err := six.Doc36.parse("doc36", fdoc); err != nil {
+		return nil, err
+	}
+	if err := seven.Doc37.parseMul("doc37", fdoc); err != nil {
+		return nil, err
+	}
+	if err := seven.Doc38.parseMul("doc38", fdoc); err != nil {
+		return nil, err
+	}
+	if err := seven.Doc39.parseMul("doc39", fdoc); err != nil {
+		return nil, err
+	}
+	if err := seven.Doc40.parseMul("doc40", fdoc); err != nil {
+		return nil, err
+	}
+	if err := seven.Doc41.parseMul("doc41", fdoc); err != nil {
+		return nil, err
+	}
+	if err := eight.Doc42.parse("doc42", fdoc, true); err != nil {
+		return nil, err
+	}
+	if err := eight.Doc43.parse("doc43", fdoc, true); err != nil {
+		return nil, err
+	}
+	if err := eight.Doc44.parseMul("doc44", fdoc); err != nil {
+		return nil, err
+	}
+
+	resp := []RespStruct{}
+	resp = append(resp, RespStruct{"Aspectos Generales", one})
+	resp = append(resp, RespStruct{"Vinculación con la Carrera", two})
+	resp = append(resp, RespStruct{"Perfil Profesional", three})
+	resp = append(resp, RespStruct{"Plan de Estudio Actual", four})
+	resp = append(resp, RespStruct{"Infraestructura (Aulas, Laboratorios, Biblioteca, Servicios)", five})
+	resp = append(resp, RespStruct{"Grados, Titulación y Menciones", six})
+	resp = append(resp, RespStruct{"Áreas de Conocimiento", seven})
+	resp = append(resp, RespStruct{"Competencias de Profesional en el Área de la Informática y Sistemas", eight})
+	return resp, nil
+}

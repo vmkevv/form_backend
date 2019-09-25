@@ -134,3 +134,14 @@ func GetFormInsByID(c *gin.Context) {
 		},
 	)
 }
+
+// GetInsQuestions get institutions questions
+func GetInsQuestions(c *gin.Context) {
+	formIns := db.FormIns{}
+	res, err := formIns.GetQuestions()
+	if err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(c, http.StatusOK, gin.H{"res": res})
+}
