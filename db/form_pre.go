@@ -125,3 +125,77 @@ func (fpre *FormPre) GetByID() error {
 	}
 	return nil
 }
+
+// GetQuestions get all questions
+func (fpre *FormPre) GetQuestions() (interface{}, error) {
+	type oneStruct struct {
+		Pre9  Select       `json:"pre9"`
+		Pre10 SelectOption `json:"pre10"`
+		Pre11 SelectOption `json:"pre11"`
+		Pre12 SelectOption `json:"pre12"`
+		Pre13 SelectOption `json:"pre13"`
+		Pre14 Select       `json:"pre14"`
+	}
+	type twoStruct struct {
+		Pre16 SelectOption `json:"pre16"`
+		Pre17 SelectOption `json:"pre17"`
+		Pre18 SelectOption `json:"pre18"`
+		Pre25 Multiple     `json:"pre25"`
+		Pre26 Select       `json:"pre26"`
+		Pre27 Select       `json:"pre27"`
+	}
+	one := oneStruct{}
+	one.Pre9.Title = "Género"
+	one.Pre10.Title = "Tipo unidad educativa"
+	one.Pre11.Title = "Ubicación unidad educativa"
+	one.Pre12.Title = "Lugar de residencia"
+	one.Pre13.Title = "Desde su casa accede a Internet por:"
+	one.Pre14.Title = "Estado civil"
+	two := twoStruct{}
+	two.Pre16.Title = "Áreas en las que le gustaría profundizar"
+	two.Pre17.Title = "Medio por el que se informó sobre la carrera de Informática"
+	two.Pre18.Title = "Participación en concursos de programación"
+	two.Pre25.Title = "Importancia de las asignaturas para la carrera de Informática"
+	two.Pre26.Title = "¿Cuántas veces ha cursado el curso pre-universitario?"
+	two.Pre27.Title = "¿Cuántas veces se ha presentado al examen de dispensación?"
+	if err := one.Pre9.parseSimple("pre9", fpre); err != nil {
+		return nil, err
+	}
+	if err := one.Pre10.parse("pre10", fpre); err != nil {
+		return nil, err
+	}
+	if err := one.Pre11.parse("pre11", fpre); err != nil {
+		return nil, err
+	}
+	if err := one.Pre12.parse("pre12", fpre); err != nil {
+		return nil, err
+	}
+	if err := one.Pre13.parse("pre13", fpre); err != nil {
+		return nil, err
+	}
+	if err := one.Pre14.parseSimple("pre14", fpre); err != nil {
+		return nil, err
+	}
+	if err := two.Pre16.parseMul("pre16", fpre); err != nil {
+		return nil, err
+	}
+	if err := two.Pre17.parseMul("pre17", fpre); err != nil {
+		return nil, err
+	}
+	if err := two.Pre18.parseMul("pre18", fpre); err != nil {
+		return nil, err
+	}
+	if err := two.Pre25.parse("pre25", fpre, true); err != nil {
+		return nil, err
+	}
+	if err := two.Pre26.parseSimple("pre26", fpre); err != nil {
+		return nil, err
+	}
+	if err := two.Pre27.parseSimple("pre27", fpre); err != nil {
+		return nil, err
+	}
+	resp := []RespStruct{}
+	resp = append(resp, RespStruct{"Aspectos Generales", one})
+	resp = append(resp, RespStruct{"Vinculación con la Carrera", two})
+	return resp, nil
+}

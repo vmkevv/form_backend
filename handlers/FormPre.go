@@ -135,3 +135,20 @@ func GetFormPreByID(c *gin.Context) {
 		},
 	)
 }
+
+// GetPreQuestions gets all pre questions
+func GetPreQuestions(c *gin.Context) {
+	formPre := db.FormPre{}
+	res, err := formPre.GetQuestions()
+	if err != nil {
+		utils.MakeR(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.MakeR(
+		c,
+		http.StatusOK,
+		gin.H{
+			"res": res,
+		},
+	)
+}
