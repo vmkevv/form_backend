@@ -144,6 +144,19 @@ func (fpre *FormPre) GetQuestions() (interface{}, error) {
 		Pre26 Select       `json:"pre26"`
 		Pre27 Select       `json:"pre27"`
 	}
+	type threeStruct struct {
+		Pre33 SelectOption `json:"pre33"`
+		Pre34 Select       `json:"pre34"`
+		Pre35 SelectOption `json:"pre35"`
+		Pre36 SelectOption `json:"pre36"`
+	}
+	type fourStruct struct {
+		Pre37 Multiple     `json:"pre37"`
+		Pre38 SelectOption `json:"pre38"`
+	}
+	type fiveStruct struct {
+		Pre39 SelectOption `json:"pre39"`
+	}
 	one := oneStruct{}
 	one.Pre9.Title = "Género"
 	one.Pre10.Title = "Tipo unidad educativa"
@@ -158,6 +171,16 @@ func (fpre *FormPre) GetQuestions() (interface{}, error) {
 	two.Pre25.Title = "Importancia de las asignaturas para la carrera de Informática"
 	two.Pre26.Title = "¿Cuántas veces ha cursado el curso pre-universitario?"
 	two.Pre27.Title = "¿Cuántas veces se ha presentado al examen de dispensación?"
+	three := threeStruct{}
+	three.Pre33.Title = "Actualmente"
+	three.Pre34.Title = "Relación de su trabajo con la carrera"
+	three.Pre35.Title = "Razones por las que trabaja"
+	three.Pre36.Title = "Tipo de empleo"
+	four := fourStruct{}
+	four.Pre37.Title = "Licenciado en Informática"
+	four.Pre38.Title = "Con qué denominaciones de la carrera de Informática esta de acuerdo"
+	five := fiveStruct{}
+	five.Pre39.Title = "¿Cuándo termine la carrera, me gustaría trabajar en?"
 	if err := one.Pre9.parseSimple("pre9", fpre); err != nil {
 		return nil, err
 	}
@@ -194,8 +217,32 @@ func (fpre *FormPre) GetQuestions() (interface{}, error) {
 	if err := two.Pre27.parseSimple("pre27", fpre); err != nil {
 		return nil, err
 	}
+	if err := three.Pre33.parse("pre33", fpre); err != nil {
+		return nil, err
+	}
+	if err := three.Pre34.parseSimple("pre34", fpre); err != nil {
+		return nil, err
+	}
+	if err := three.Pre35.parse("pre35", fpre); err != nil {
+		return nil, err
+	}
+	if err := three.Pre36.parse("pre36", fpre); err != nil {
+		return nil, err
+	}
+	if err := four.Pre37.parse("pre37", fpre, false); err != nil {
+		return nil, err
+	}
+	if err := four.Pre38.parseMul("pre38", fpre); err != nil {
+		return nil, err
+	}
+	if err := five.Pre39.parseMul("pre39", fpre); err != nil {
+		return nil, err
+	}
 	resp := []RespStruct{}
 	resp = append(resp, RespStruct{"Aspectos Generales", one})
 	resp = append(resp, RespStruct{"Vinculación con la Carrera", two})
+	resp = append(resp, RespStruct{"Sitación Laboral", three})
+	resp = append(resp, RespStruct{"Grados, Titulación y Menciones", four})
+	resp = append(resp, RespStruct{"Aspiraciones Futuras", five})
 	return resp, nil
 }
